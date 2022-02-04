@@ -1,0 +1,11 @@
+@import "/styles/colors.scss";
+
+.logo {
+  font-weight: 800;
+  font-size: 20px;
+  color: $green-primary;
+
+  .subtitle {
+    color: #000;
+  }
+}
