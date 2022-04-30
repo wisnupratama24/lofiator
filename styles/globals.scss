@@ -2,8 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@import "/styles/colors.scss";
+
 *,
 body {
   font-family: "Poppins", sans-serif;
   background-color: #fff;
+}
+
+.btn-default {
+background-color: $green-primary;
 }

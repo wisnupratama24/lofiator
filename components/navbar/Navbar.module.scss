@@ -1,0 +1,42 @@
+@import "/styles/colors.scss";
+
+$navbar-height:40;
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  font-family: "Poppins", sans-serif;
+  height: 40;
+
+  ::after {
+      content: " ";
+      position: absolute;
+      border-bottom: 1px solid #848484;
+      left: 0;
+      right: 0;
+      top: 60px;
+  }
+
+
+  ul {
+    // display: grid;
+    grid-auto-flow: column;
+    place-content: center;
+    margin: auto;
+    gap: 30px;
+
+    li {
+      color: #5c5b5b;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all ease 0.3s;
+
+
+      &:hover {
+          color: $green-primary;
+      }
+    }
+  }
+}
+
+
+
