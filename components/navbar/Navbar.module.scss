@@ -5,15 +5,19 @@ $navbar-height:40;
   display: flex;
   justify-content: space-between;
   font-family: "Poppins", sans-serif;
-  height: 40;
+  position: relative;
+  height: 40px;
+  z-index: 9999;
+  background-color: white;
+
 
   ::after {
       content: " ";
-      position: absolute;
+      position: fixed;
       border-bottom: 1px solid #848484;
       left: 0;
       right: 0;
-      top: 60px;
+      top: 70px;
   }
 
 

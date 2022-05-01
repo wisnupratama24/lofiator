@@ -1,8 +1,9 @@
 @import "/styles/colors.scss";
 
 .homepage {
-    margin-top: 4rem;
+    margin-top: 7rem;
     display: flex;
+    position: relative;
 
     :first-child {
         max-width: 80%;
@@ -17,15 +18,61 @@
 
     .image {
         width: 500px;
-        height: 240px;
-        background-color: rgb(156, 156, 156);
+        height: 400px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        z-index: 1;
+        margin-top: -6rem;
+        background-image: url('/assets/home-ilustration.svg');
     }
+}
+
+
+.homepageadvantage {
+
+    position: relative;
+    display: grid;
+    padding: 1rem 0;
+    grid-template-columns: 1fr 1fr;
+    place-items: center;
+    background: rgba(0, 136, 95, 0.13);
+    
+
+    .imageadvantage {
+        width: 500px;
+        height: 400px;
+        background: transparent;
+        background-size: cover;
+        background-position: center;
+        background-image: url('/assets/home-ilustration-advantage.svg');
+    }
+
+    .subtitle {
+        color: #6C6969;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .remark {
+        color: #B4ACAC;
+        font-size: 12px;
+    }
+    
+    :nth-child(2) {
+        h5 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #6C6969;
+        }
+    }
+
+  
 }
 
 @media screen and (max-width: 1024px) {
     .homepage {
-        
-        margin-top: 3rem;
+        margin-top: 8rem;
         :first-child {
             max-width: 90%;
         
@@ -37,6 +84,25 @@
 
         .image {
             display: none;
+        }
+    }
+
+    .homepageadvantage {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media screen and (max-width: 728px) {
+  
+    .homepageadvantage {
+        grid-template-columns: 1fr;
+
+        :nth-child(2) {
+            h5 {
+                font-size: 18px;
+                text-align: center;
+            }
         }
     }
 }
