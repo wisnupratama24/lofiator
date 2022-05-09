@@ -1,0 +1,54 @@
+@import "/styles/colors.scss";
+.DetailFindCulvitatorPage {
+  padding-top: 7rem;
+  background-color: #fbfbfb;
+  padding-bottom: 5rem;
+
+  .DetailFindCulvitatorPageContent {
+    display: grid;
+    grid-template-columns: 1.5fr 3.5fr;
+    column-gap: 1rem;
+
+    max-height: 100vw;
+    overflow: hidden;
+
+    .DetailFindCulvitatorCardOffer {
+       
+        h5 {
+        color: #00885f;
+        font-size: 18px;
+        font-weight: 600;
+        }
+
+        .CardItemOfferTable {
+        
+            tr td {
+                font-size: 12px;
+            }
+        }
+    }
+
+    .DetailFindCulvitatorUserOffer {
+        display: grid;
+        margin-top: 2rem;
+        column-gap: 1rem;
+        grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .OtherOffer {
+      position: fixed;
+        width: 25%;
+
+    h6 {
+      color: #00885f;
+      font-weight: 600;
+    }
+
+    table {
+      tr td {
+        font-size: 11px;
+      }
+    }
+  }
+}
