@@ -10,6 +10,8 @@ interface IPropsDefaultInputText {
   classNameLabel?: string;
   styleLabel?: HTMLAttributes<HTMLLabelElement>;
   styleInput?: React.CSSProperties;
+  showError?: boolean;
+  messageError?: string;
   [key: string]: any;
 }
 
@@ -22,6 +24,8 @@ function DefaultInputText({
   placeholder,
   styleLabel,
   styleInput,
+  showError = false,
+  messageError = "",
   ...props
 }: IPropsDefaultInputText) {
   return (
@@ -38,6 +42,10 @@ function DefaultInputText({
           style={styleInput}
           {...props}
         />
+
+        {showError && messageError && (
+          <p className='text-red-600 py-1 text-xs'>{messageError}</p>
+        )}
       </div>
     </div>
   );

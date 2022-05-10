@@ -1,12 +1,71 @@
 import React from "react";
-import { Layout, Navbar } from "~/components";
+import { Alert, Layout, Navbar } from "~/components";
 import Head from "next/head";
 import { ClickHere } from "../login/LoginPage";
 import styles from "./RegisterPage.module.scss";
 import DefaultButton from "~/components/button/DefaultButton";
 import DefaultInputText from "~/components/input/DefaultInputText";
+import { userRegister } from "./utils/api";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
+const registerSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("Wrong email format")
+    .min(3, "Minimum 3 symbols")
+    .max(50, "Maximum 50 symbols")
+    .required("Email is required"),
+  name: Yup.string()
+    .min(3, "Minimum 3 symbols")
+    .max(50, "Maximum 50 symbols")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(3, "Minimum 3 symbols")
+    .max(50, "Maximum 50 symbols")
+    .required("Password is required"),
+  password_confirmation: Yup.string()
+    .min(3, "Minimum 3 symbols")
+    .max(50, "Maximum 50 symbols")
+    .required("Password is required"),
+});
+
+const initialValues = {
+  name: "",
+  email: "",
+  password: "",
+  password_confirmation: "",
+};
 
 function RegisterPage() {
+  const formik = useFormik({
+    initialValues,
+    validationSchema: registerSchema,
+    onSubmit: (values, { setStatus, setSubmitting }) => {
+      setSubmitting(true);
+      userRegister(values)
+        .then(() => {
+          setSubmitting(false);
+          setStatus({
+            state: true,
+            message:
+              "Pendaftaran berhasil, konfirmasi email anda, kemudian login",
+          });
+        })
+        .catch((error) => {
+          const errorList = error.response.data.error;
+          const errorListArray = [];
+          for (const property in errorList) {
+            errorListArray.push(errorList[property]);
+          }
+          setStatus({
+            state: false,
+            message: errorListArray[0][0],
+          });
+          setSubmitting(false);
+        });
+    },
+  });
+
   return (
     <>
       <Head>
@@ -22,45 +81,66 @@ function RegisterPage() {
           <div className='md:w-2/4 w-full md:px-0 px-4'>
             <h4 className='title-auth'>Register</h4>
 
-            <div className='mt-4'>
-              <DefaultInputText
-                label='Nama Lengkap'
-                id='name'
-                type='text'
-                placeholder='Nama Lengkap'
-              />
-              <DefaultInputText
-                label='Email'
-                id='email'
-                type='email'
-                placeholder='user@mail.com'
-              />
+            <Alert
+              show={formik.status === undefined ? false : true}
+              message={formik.status?.message}
+              type={formik.status?.state ? "success" : "danger"}
+            />
+            <form onSubmit={formik.handleSubmit}>
+              <div className='mt-4'>
+                <DefaultInputText
+                  label='Nama Lengkap'
+                  id='name'
+                  type='text'
+                  showError={formik.touched.name}
+                  messageError={formik.errors.name}
+                  placeholder='Nama Lengkap'
+                  {...formik.getFieldProps("name")}
+                />
+                <DefaultInputText
+                  label='Email'
+                  id='email'
+                  type='email'
+                  showError={formik.touched.email}
+                  messageError={formik.errors.email}
+                  placeholder='user@mail.com'
+                  {...formik.getFieldProps("email")}
+                />
 
-              <DefaultInputText
-                label='Password'
-                id='password'
-                type='password'
-                placeholder='*******'
-              />
-              <DefaultInputText
-                label='Konfirmasi Password'
-                id='konfirmasi-password'
-                type='password'
-                placeholder='*******'
-              />
-            </div>
+                <DefaultInputText
+                  label='Password'
+                  id='password'
+                  type='password'
+                  placeholder='*******'
+                  showError={formik.touched.password}
+                  messageError={formik.errors.password}
+                  {...formik.getFieldProps("password")}
+                />
+                <DefaultInputText
+                  label='Konfirmasi Password'
+                  id='konfirmasi-password'
+                  type='password'
+                  placeholder='*******'
+                  showError={formik.touched.password_confirmation}
+                  messageError={formik.errors.password_confirmation}
+                  {...formik.getFieldProps("password_confirmation")}
+                />
+              </div>
 
-            <div className='mt-6'>
-              <DefaultButton
-                label='Daftar'
-                className='block w-full py-2 bg-green-700 text-base'
-              />
-              <p className='text-xs text-gray-400 mt-3 font-light'>
-                Dengan melanjutkan, Anda memahami dan menyetujui penggunaan Kami
-                atas informasi yang Anda sampaikan sesuai dengan ketentuan
-                Kebijakan Privasi.
-              </p>
-            </div>
+              <div className='mt-6'>
+                <DefaultButton
+                  label='Daftar'
+                  type='submit'
+                  disabled={formik.isSubmitting || !formik.isValid}
+                  className='block w-full py-2 text-base'
+                />
+                <p className='text-xs text-gray-400 mt-3 font-light'>
+                  Dengan melanjutkan, Anda memahami dan menyetujui penggunaan
+                  Kami atas informasi yang Anda sampaikan sesuai dengan
+                  ketentuan Kebijakan Privasi.
+                </p>
+              </div>
+            </form>
 
             <ClickHere label='Sudah punya akun?' href='/login' />
           </div>

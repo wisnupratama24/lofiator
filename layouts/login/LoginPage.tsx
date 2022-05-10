@@ -1,13 +1,70 @@
 import React from "react";
-import { Layout, Navbar } from "~/components";
+import { Alert, Layout, Navbar } from "~/components";
 import NewOffer from "./NewOffer";
 import styles from "./LoginPage.module.scss";
 import Head from "next/head";
 import DefaultInputText from "~/components/input/DefaultInputText";
 import DefaultButton from "~/components/button/DefaultButton";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { userLogin } from "./utils/api";
+
+const loginSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("Wrong email format")
+    .min(3, "Minimum 3 symbols")
+    .max(50, "Maximum 50 symbols")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(3, "Minimum 3 symbols")
+    .max(50, "Maximum 50 symbols")
+    .required("Password is required"),
+});
+
+const initialValues = {
+  email: "",
+  password: "",
+};
 
 function LoginPage() {
+  let history = useRouter();
+
+  const formik = useFormik({
+    initialValues,
+    validationSchema: loginSchema,
+    onSubmit: (values, { setStatus, setSubmitting }) => {
+      setSubmitting(true);
+      userLogin(values.email, values.password)
+        .then((response) => {
+          setSubmitting(false);
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              accessToken: response.data.data.api_token,
+              name: response.data.data.user.name,
+            })
+          );
+          history.push({
+            pathname: "/",
+          });
+        })
+        .catch((error) => {
+          const errorList = error.response.data.error;
+          const errorListArray = [];
+          for (const property in errorList) {
+            errorListArray.push(errorList[property]);
+          }
+          setStatus({
+            state: false,
+            message: errorListArray[0][0],
+          });
+          setSubmitting(false);
+        });
+    },
+  });
+
   return (
     <>
       <Head>
@@ -25,33 +82,49 @@ function LoginPage() {
           <div className={styles.form}>
             <h4 className='title-auth'>Log in</h4>
 
-            <div className='mt-4'>
-              <DefaultInputText
-                label='Email'
-                id='email'
-                type='email'
-                placeholder='user@mail.com'
-              />
+            <Alert
+              show={formik.status === undefined ? false : true}
+              message={formik.status?.message}
+              type={formik.status?.state ? "success" : "danger"}
+            />
 
-              <DefaultInputText
-                label='Password'
-                id='password'
-                type='password'
-                placeholder='*******'
-              />
-            </div>
+            <form onSubmit={formik.handleSubmit}>
+              <div className='mt-4'>
+                <DefaultInputText
+                  label='Email'
+                  id='email'
+                  type='email'
+                  placeholder='user@mail.com'
+                  showError={formik.touched.email}
+                  messageError={formik.errors.email}
+                  {...formik.getFieldProps("email")}
+                />
 
-            <div className='mt-6'>
-              <DefaultButton
-                label='Log me in'
-                className='block w-full py-2 bg-green-700 text-base'
-              />
-              <p className='text-xs text-gray-400 mt-3 font-light'>
-                Dengan melanjutkan, Anda memahami dan menyetujui penggunaan Kami
-                atas informasi yang Anda sampaikan sesuai dengan ketentuan
-                Kebijakan Privasi.
-              </p>
-            </div>
+                <DefaultInputText
+                  label='Password'
+                  id='password'
+                  type='password'
+                  placeholder='*******'
+                  showError={formik.touched.password}
+                  messageError={formik.errors.password}
+                  {...formik.getFieldProps("password")}
+                />
+              </div>
+
+              <div className='mt-6'>
+                <DefaultButton
+                  label='Log me in'
+                  type='submit'
+                  disabled={formik.isSubmitting || !formik.isValid}
+                  className='block w-full py-2 text-base'
+                />
+                <p className='text-xs text-gray-400 mt-3 font-light'>
+                  Dengan melanjutkan, Anda memahami dan menyetujui penggunaan
+                  Kami atas informasi yang Anda sampaikan sesuai dengan
+                  ketentuan Kebijakan Privasi.
+                </p>
+              </div>
+            </form>
 
             <ClickHere label='Lupa kata sandi?' href='/register' />
           </div>
