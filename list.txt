@@ -1,0 +1,27 @@
+Lofiator List Ubah
+
+Fokus Utama
+
+User bisa menambahkan jasa yang ingin ditawarkan
+
+Kekurangan
+
+1. Belum ada profil user (bisa diisi setelah berhasil register)
+2. Belum ada column no_hp dan asal (bisa diisi setelah berhasil register)
+3. Pada feed belum ada string jenis_budidaya
+   Jenis Budidaya nanti static checkbox dari frontend
+
+Bandeng, Mujair, Gurame, Udang, Kepiting, Rajungan, Nila, Lele dll
+
+Skema
+
+Pada Feed bisa menambahkan gambar lebih dari 1,
+User mengisi title, desc, gambar, waktu panen, jenis_budidaya
+
+user bisa update dan delete
+
+ada 1 endpoint buat ditampilin di feed yg ter pagination
+ada nama user, profile user, posted at, title, desc, waktu panen, jenis budidaya
+
+buat filter berdasarkan jenis budidaya & asal/kota, dan date_start dan date finish (dari createdAt)
+
