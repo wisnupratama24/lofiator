@@ -10,6 +10,8 @@ import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { userLogin } from "./utils/api";
+import Cookies from "js-cookie";
+import { REGISTER_PAGE } from "~/constants/page";
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
@@ -39,13 +41,11 @@ function LoginPage() {
       userLogin(values.email, values.password)
         .then((response) => {
           setSubmitting(false);
-          localStorage.setItem(
-            "user",
-            JSON.stringify({
-              accessToken: response.data.data.api_token,
-              name: response.data.data.user.name,
-            })
-          );
+          const userCookie = JSON.stringify({
+            accessToken: response.data.data.api_token,
+            name: response.data.data.user.name,
+          });
+          Cookies.set("user", userCookie);
           history.push({
             pathname: "/",
           });
@@ -126,7 +126,7 @@ function LoginPage() {
               </div>
             </form>
 
-            <ClickHere label='Lupa kata sandi?' href='/register' />
+            <ClickHere label='Lupa kata sandi?' href={REGISTER_PAGE} />
           </div>
         </section>
       </Layout>

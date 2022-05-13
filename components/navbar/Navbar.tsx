@@ -1,7 +1,11 @@
 import Link from "next/link";
 import React from "react";
+import { useSelector } from "react-redux";
+import { PROFILE_PAGE, REGISTER_PAGE } from "~/constants/page";
+import { RootState } from "~/redux/RootReducers";
 import { Logo } from "..";
 import DefaultButton from "../button/DefaultButton";
+import { IInitialStatePageInit } from "../pageInit/reducer";
 import styles from "./Navbar.module.scss";
 
 const navItems = [
@@ -20,6 +24,10 @@ const navItems = [
 ];
 
 function Navbar() {
+  const pageInit = useSelector<RootState>(
+    ({ pageInit }) => pageInit
+  ) as IInitialStatePageInit;
+
   return (
     <section>
       <div className='lg:px-28 md:px-20 px-8 max-w-screen-xl mx-auto fixed left-0 right-0 top-0 py-4 bg-white z-10'>
@@ -37,9 +45,13 @@ function Navbar() {
           </ul>
 
           <div>
-            <Link href='/register'>
-              <DefaultButton label='Daftar Sekarang' />
-            </Link>
+            {pageInit.isAuthorized ? (
+              <Link href={PROFILE_PAGE}>{pageInit.name}</Link>
+            ) : (
+              <Link href={REGISTER_PAGE}>
+                <DefaultButton label='Daftar Sekarang' />
+              </Link>
+            )}
           </div>
         </header>
       </div>

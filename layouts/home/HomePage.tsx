@@ -5,7 +5,7 @@ import DefaultButton from "~/components/button/DefaultButton";
 
 import styles from "./HomePage.module.scss";
 
-const HomePage: NextPage = () => {
+const HomePage: NextPage = ({ isAuthorized }: any) => {
   return (
     <>
       <Head>
@@ -15,7 +15,7 @@ const HomePage: NextPage = () => {
       </Head>
 
       <Layout>
-        <Navbar />
+        <Navbar isAuthorized={isAuthorized} />
 
         <section className={styles.homepage}>
           <div>

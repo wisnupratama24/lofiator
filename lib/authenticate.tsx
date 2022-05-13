@@ -57,7 +57,7 @@ export function authenticateRoute<T>(Component: ComponentType<T>) {
   };
 }
 
-const LayoutSplashScreen = () => {
+export const LayoutSplashScreen = () => {
   return (
     <div className='flex items-center justify-center mt-28'>
       <h1>Loading....</h1>

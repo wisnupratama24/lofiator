@@ -1,0 +1,18 @@
+@import "/styles/colors.scss";
+
+.ProfilePage {
+    background-color: #FBFBFB;
+    padding-top: 7rem;
+
+    .ProfilePageContent {
+        .ProfileUserCard {
+            table {
+                width: 100%;
+            }
+            table tr td {
+                font-size: 14px;
+                line-height: 1.75rem;
+            }
+        }
+    }
+}

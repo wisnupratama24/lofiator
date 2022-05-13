@@ -8,6 +8,7 @@ import DefaultInputText from "~/components/input/DefaultInputText";
 import { userRegister } from "./utils/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { LOGIN_PAGE } from "~/constants/page";
 
 const registerSchema = Yup.object().shape({
   email: Yup.string()
@@ -142,7 +143,7 @@ function RegisterPage() {
               </div>
             </form>
 
-            <ClickHere label='Sudah punya akun?' href='/login' />
+            <ClickHere label='Sudah punya akun?' href={LOGIN_PAGE} />
           </div>
         </section>
       </Layout>
