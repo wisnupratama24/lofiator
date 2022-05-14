@@ -4,4 +4,5 @@ export interface IUserModel {
     no_hp : string,
     city : string,
     image : string
+    description : string
 }

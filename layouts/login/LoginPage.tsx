@@ -12,6 +12,8 @@ import * as Yup from "yup";
 import { userLogin } from "./utils/api";
 import Cookies from "js-cookie";
 import { REGISTER_PAGE } from "~/constants/page";
+import { useDispatch } from "react-redux";
+import { setAuthorized, setNameUser } from "~/components/pageInit/reducer";
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
@@ -32,6 +34,7 @@ const initialValues = {
 
 function LoginPage() {
   let history = useRouter();
+  const dispatch = useDispatch();
 
   const formik = useFormik({
     initialValues,
@@ -46,6 +49,8 @@ function LoginPage() {
             name: response.data.data.user.name,
           });
           Cookies.set("user", userCookie);
+          dispatch(setNameUser(response.data.data.user.name));
+          dispatch(setAuthorized(true));
           history.push({
             pathname: "/",
           });

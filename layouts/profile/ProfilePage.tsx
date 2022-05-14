@@ -6,9 +6,18 @@ import { IUserModel } from "./utils/types";
 import { fetchUserDetail } from "./utils/api";
 import styles from "./ProfilePage.module.scss";
 import ProfileUserCard from "./ProfileUserCard";
+import FormUpdateProfile from "./FormUpdateProfile";
 
+const initialUser: IUserModel = {
+  name: "",
+  city: "",
+  no_hp: "",
+  image: "",
+  description: "",
+  email: "",
+};
 function ProfilePage() {
-  const [user, setUser] = useState<IUserModel | null>(null);
+  const [user, setUser] = useState<IUserModel>(initialUser);
 
   const fetchUser = async () => {
     try {
@@ -17,7 +26,7 @@ function ProfilePage() {
         setUser(response.data);
       }
     } catch (error) {
-      setUser(null);
+      setUser(initialUser);
     }
   };
 
@@ -38,14 +47,17 @@ function ProfilePage() {
       <Layout classNames={styles.ProfilePage}>
         <section className={styles.ProfilePageContent}>
           <ProfileUserCard
-            name={typeof user?.name !== "undefined" ? user.name : ""}
-            city={typeof user?.city !== "undefined" ? user.city : ""}
-            email={typeof user?.email !== "undefined" ? user.email : ""}
-            image={typeof user?.image !== "undefined" ? user.image : ""}
-            no_hp={typeof user?.no_hp !== "undefined" ? user.no_hp : ""}
+            name={user.name}
+            city={user.city}
+            email={user.email}
+            image={user.image}
+            no_hp={user.no_hp}
+            description={user.description}
           />
         </section>
       </Layout>
+
+      <FormUpdateProfile user={user} />
     </>
   );
 }

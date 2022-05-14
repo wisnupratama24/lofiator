@@ -2,6 +2,7 @@ import React from "react";
 import { IUserModel } from "./utils/types";
 import styles from "./ProfilePage.module.scss";
 import DefaultButton from "~/components/button/DefaultButton";
+import { openModal } from "~/components/modal/DefaultModal";
 
 function ProfileUserCard({ name, email, city, image, no_hp }: IUserModel) {
   return (
@@ -52,7 +53,11 @@ function ProfileUserCard({ name, email, city, image, no_hp }: IUserModel) {
           </div>
         </div>
 
-        <DefaultButton label='Update' className='mt-6 w-full py-2' />
+        <DefaultButton
+          label='Update'
+          className='mt-6 w-full py-2'
+          onClick={() => openModal("modal-update-profile")}
+        />
       </div>
     </div>
   );

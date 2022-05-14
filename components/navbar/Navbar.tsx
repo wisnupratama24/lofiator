@@ -48,9 +48,11 @@ function Navbar() {
             {pageInit.isAuthorized ? (
               <Link href={PROFILE_PAGE}>{pageInit.name}</Link>
             ) : (
-              <Link href={REGISTER_PAGE}>
-                <DefaultButton label='Daftar Sekarang' />
-              </Link>
+              <DefaultButton
+                label='Daftar Sekarang'
+                isLink={true}
+                href={REGISTER_PAGE}
+              />
             )}
           </div>
         </header>
