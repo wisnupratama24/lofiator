@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Layout, Navbar } from "~/components";
 import Head from "next/head";
 import { authenticateRoute } from "~/lib/authenticate";
-import { IUserModel } from "./utils/types";
+import { IUserModel, MODAL_FORM_JASA } from "./utils/types";
 import { fetchUserDetail } from "./utils/api";
 import styles from "./ProfilePage.module.scss";
 import ProfileUserCard from "./ProfileUserCard";
 import FormUpdateProfile from "./FormUpdateProfile";
+import DefaultButton from "~/components/button/DefaultButton";
+import ProfilePageListJasa from "./ProfilePageListJasa";
+import { openModal } from "~/components/modal/DefaultModal";
+import ProfilePageFormJasa from "./ProfilePageFormJasa";
 
 const initialUser: IUserModel = {
   name: "",
@@ -16,6 +20,7 @@ const initialUser: IUserModel = {
   description: "",
   email: "",
 };
+
 function ProfilePage() {
   const [user, setUser] = useState<IUserModel>(initialUser);
 
@@ -45,7 +50,7 @@ function ProfilePage() {
       <Navbar />
 
       <Layout classNames={styles.ProfilePage}>
-        <section className={styles.ProfilePageContent}>
+        <section className={styles.ProfilePageUser}>
           <ProfileUserCard
             name={user.name}
             city={user.city}
@@ -55,9 +60,25 @@ function ProfilePage() {
             description={user.description}
           />
         </section>
+
+        <section className={styles.ProfilePageJasa}>
+          <div className='flex justify-between h-8 mb-4'>
+            <div>
+              <p className='text-base font-medium'>List Jasa</p>
+            </div>
+            <DefaultButton
+              label='Tambah'
+              className='bg-indigo-500 hover:bg-indigo-700'
+              onClick={() => openModal(MODAL_FORM_JASA)}
+            />
+          </div>
+
+          <ProfilePageListJasa />
+        </section>
       </Layout>
 
-      <FormUpdateProfile user={user} />
+      <FormUpdateProfile user={user} fetchUser={fetchUser} />
+      <ProfilePageFormJasa />
     </>
   );
 }

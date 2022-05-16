@@ -6,3 +6,5 @@ export interface IUserModel {
     image : string
     description : string
 }
+
+export const MODAL_FORM_JASA = 'modal-form-jasa'

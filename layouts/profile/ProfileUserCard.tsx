@@ -3,15 +3,25 @@ import { IUserModel } from "./utils/types";
 import styles from "./ProfilePage.module.scss";
 import DefaultButton from "~/components/button/DefaultButton";
 import { openModal } from "~/components/modal/DefaultModal";
+import { BASE_URL } from "~/lib/setupApi";
 
-function ProfileUserCard({ name, email, city, image, no_hp }: IUserModel) {
+function ProfileUserCard({
+  name,
+  email,
+  city,
+  image,
+  no_hp,
+  description,
+}: IUserModel) {
   return (
     <div className={styles.ProfileUserCard}>
       <h5 className='font-medium'>Profile User</h5>
 
       <div className='mt-5 bg-white p-5'>
         <div className=' flex gap-5'>
-          <div className='w-52 h-52 bg-gray-400'></div>
+          <div className='w-52 bg-gray-400'>
+            <img src={`${BASE_URL}/${image}`} alt={name} className='max-w-52' />
+          </div>
           <div className='w-8/12'>
             <table width={"100%"}>
               <tbody>
@@ -43,12 +53,7 @@ function ProfileUserCard({ name, email, city, image, no_hp }: IUserModel) {
             </table>
 
             <p className='font-light text-sm mt-2 text-gray-400'>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis
-              dolor ex vero nihil praesentium impedit numquam quibusdam error
-              voluptatem esse, facilis illum commodi ut corrupti autem, suscipit
-              mollitia possimus laboriosam adipisci molestias. Quae autem iure,
-              perspiciatis, officia deserunt consectetur officiis similique id
-              inventore suscipit repellat et nobis ipsa ea nam.
+              {description}
             </p>
           </div>
         </div>

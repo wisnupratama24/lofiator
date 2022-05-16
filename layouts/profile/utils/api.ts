@@ -14,3 +14,24 @@ export const fetchUserDetail =  async () => {
         }
     }
 }
+
+
+export const fetchListJasa =  async () => {
+    try {
+        const response = await setupApi.get('/feed');
+        return {
+            state : true,
+            data : response.data.data
+        }
+    } catch (error) {
+        return {
+            state: false,
+            data : []
+        }
+    }
+}
+
+
+export const updateUser = (formData: any ) => {
+    return  setupApi.post('/user/update', formData)    
+}

@@ -4,7 +4,7 @@
     background-color: #FBFBFB;
     padding-top: 7rem;
 
-    .ProfilePageContent {
+    .ProfilePageUser {
         .ProfileUserCard {
             table {
                 width: 100%;
@@ -14,5 +14,10 @@
                 line-height: 1.75rem;
             }
         }
+    }
+
+    .ProfilePageJasa {
+        margin-top: 2rem;
+        margin-bottom: 5rem;
     }
 }
