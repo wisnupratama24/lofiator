@@ -16,6 +16,7 @@ function Table({ headers, children }: IPropsTable) {
             {headers.map((header, index) => {
               return (
                 <th
+                  key={index}
                   scope='col'
                   className='px-6 py-3'
                   style={{

@@ -1,16 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "~/components";
-import { fetchListJasa } from "./utils/api";
+import { PencilIcon, TrashIcon } from "~/components/icons";
+import { defaultDateDisplay } from "~/lib/helpers";
+import { IFeedModel } from "./utils/types";
 
-function ProfilePageListJasa() {
+function ProfilePageListJasa({
+  handleClickUpdate,
+  handleClickDelete,
+  setListJasa,
+  rows,
+}: {
+  handleClickUpdate: Function;
+  setListJasa: Function;
+  handleClickDelete: Function;
+  rows: IFeedModel[];
+}) {
   useEffect(() => {
     setListJasa();
   }, []);
 
-  const setListJasa = async () => {
-    const response = await fetchListJasa();
-    console.log("response", response);
-  };
   return (
     <>
       <Table
@@ -33,7 +41,29 @@ function ProfilePageListJasa() {
             width: "10%",
           },
         ]}>
-        <tr></tr>
+        {rows.map((item, index: number) => {
+          return (
+            <tr className='bg-white border-b'>
+              <td className='px-6 py-4'>{index + 1}</td>
+              <td className='px-6 py-4'>
+                {defaultDateDisplay(item.createdAt)}
+              </td>
+              <td className='px-6 py-4'>{item.type_cultivation}</td>
+              <td className='px-6 py-4'>{item.harvest_time}</td>
+              <td className='py-4 px-4 flex gap-2 text-center'>
+                <button type='button' onClick={() => handleClickUpdate(item)}>
+                  <PencilIcon />
+                </button>
+
+                <button
+                  type='button'
+                  onClick={() => handleClickDelete(item.id)}>
+                  <TrashIcon />
+                </button>
+              </td>
+            </tr>
+          );
+        })}
       </Table>
     </>
   );

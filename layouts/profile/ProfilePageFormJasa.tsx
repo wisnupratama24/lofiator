@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DefaultModal } from "~/components";
-import { MODAL_FORM_JASA } from "./utils/types";
+import { IInitialValuesJasa, MODAL_FORM_JASA } from "./utils/types";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import DefaultInputText from "~/components/input/DefaultInputText";
 import DefaultInputTextArea from "~/components/input/DefaultInputTextArea";
 import { jenisBudidayaList, waktuPanenList } from "~/lib/types";
+import { createJasa, updateJasa } from "./utils/api";
+import { isEmpty, toastSucces } from "~/lib/helpers";
+import { closeModal } from "~/components/modal/DefaultModal";
 
 const formJasaSchema = Yup.object().shape({
   title: Yup.string()
@@ -17,9 +20,30 @@ const formJasaSchema = Yup.object().shape({
     .required("Deskripsi tidak boleh kosong"),
 });
 
-function ProfilePageFormJasa() {
-  const [waktuPanen, setWaktuPanen] = useState<string[]>([]);
-  const [jenisBudidaya, setJenisBudidaya] = useState<string[]>([]);
+interface IProfilePageFormJasa {
+  initialValues: IInitialValuesJasa;
+  setListJasa: Function;
+}
+
+function ProfilePageFormJasa({
+  initialValues,
+  setListJasa,
+}: IProfilePageFormJasa) {
+  const [waktuPanen, setWaktuPanen] = useState<string[]>(() => {
+    if (initialValues.waktu_panen.length === 0) {
+      return [];
+    } else {
+      return initialValues.waktu_panen;
+    }
+  });
+  const [jenisBudidaya, setJenisBudidaya] = useState<string[]>(() => {
+    if (initialValues.jenis_budidaya.length === 0) {
+      return [];
+    } else {
+      return initialValues.jenis_budidaya;
+    }
+  });
+
   const [imageCount, setImageCount] = useState(1);
   const [imageList, setImageList] = useState<
     {
@@ -35,14 +59,45 @@ function ProfilePageFormJasa() {
 
   const formik = useFormik({
     initialValues: {
-      title: "",
-      description: "",
-      harvest_time: "",
+      title: initialValues.title,
+      description: initialValues.description,
     },
     enableReinitialize: true,
     validationSchema: formJasaSchema,
-    onSubmit: (values, { setStatus, setSubmitting }) => {
+    onSubmit: (values, { setSubmitting }) => {
       setSubmitting(true);
+
+      const formData = new FormData();
+      formData.append("title", values.title);
+      formData.append("description", values.description);
+      formData.append("harvest_time", waktuPanen.toString());
+      formData.append("type_cultivation", jenisBudidaya.toString());
+
+      imageList.map((item) => {
+        if (!isEmpty(item.value)) {
+          formData.append("image[]", item.value);
+        }
+      });
+
+      if (isEmpty(initialValues.id)) {
+        createJasa(formData)
+          .then(() => {
+            toastSucces("Berhasil");
+            setSubmitting(false);
+            closeModal(MODAL_FORM_JASA);
+            setListJasa();
+          })
+          .catch((error) => console.log(error));
+      } else {
+        updateJasa(formData, initialValues.id.toString())
+          .then(() => {
+            toastSucces("Berhasil");
+            setSubmitting(false);
+            closeModal(MODAL_FORM_JASA);
+            setListJasa();
+          })
+          .catch((error) => console.log(error));
+      }
     },
   });
 
@@ -72,13 +127,13 @@ function ProfilePageFormJasa() {
     const images = [];
     for (let i = 1; i <= imageCount; i++) {
       images.push(
-        <div className='grid grid-cols-12 items-center gap-3'>
+        <div className='grid grid-cols-12 items-center gap-3' key={i}>
           <div className='col-span-11'>
             <DefaultInputText
-              className='text-sm'
-              classNameLabel='text-sm'
+              className='text-sm image-1'
+              classNameLabel='text-sm image-label'
               label='Gambar'
-              id='image'
+              id={`image-${i}`}
               type='file'
               placeholder=''
               onChange={(e: any) => handleChangeImage(e.target.files[0], i)}
@@ -114,6 +169,8 @@ function ProfilePageFormJasa() {
 
   const handleChangeImage = (value: any, index: number) => {
     const filtered = imageList.filter((item) => item.index === index);
+    // @ts-ignore
+    document.querySelector(".image-label").innerHTML = "OK";
     if (filtered.length > 0) {
       const deleteFiltered = imageList.filter((item) => item.index !== index);
       setImageList([
@@ -143,13 +200,17 @@ function ProfilePageFormJasa() {
     }
   };
 
+  useEffect(() => {
+    setJenisBudidaya(initialValues.jenis_budidaya);
+    setWaktuPanen(initialValues.waktu_panen);
+  }, [initialValues.id]);
+
   return (
-    <form
-      method='POST'
-      onSubmit={(e) => {
-        e.preventDefault();
-      }}>
-      <DefaultModal target={MODAL_FORM_JASA} title='Jasa'>
+    <form method='POST' onSubmit={formik.handleSubmit}>
+      <DefaultModal
+        target={MODAL_FORM_JASA}
+        title='Jasa'
+        disabled={formik.isSubmitting || !formik.isValid}>
         <div className='mt-2'>
           <DefaultInputText
             className='text-sm'
@@ -181,10 +242,13 @@ function ProfilePageFormJasa() {
             </p>
             <div className='grid grid-cols-5'>
               {waktuPanenList.map((item, index) => {
+                const checked = waktuPanen.filter((w) => w === item.value);
                 return (
                   <div className='flex gap-2 items-center mb-1'>
                     <input
+                      checked={checked.length > 0 ? true : false}
                       type='checkbox'
+                      defaultValue={item.value}
                       id={`harvest-time-${index}`}
                       onChange={() => handleChangeWaktuPanen(item.value)}
                     />
@@ -205,9 +269,11 @@ function ProfilePageFormJasa() {
             </p>
             <div className='grid grid-cols-5'>
               {jenisBudidayaList.map((item, index) => {
+                const checked = jenisBudidaya.filter((w) => w === item.value);
                 return (
                   <div className='flex gap-2 items-center mb-1'>
                     <input
+                      checked={checked.length > 0 ? true : false}
                       type='checkbox'
                       id={`type-cultivation-${index}`}
                       onChange={() => handleChangeJenisBudidaya(item.value)}
@@ -230,7 +296,6 @@ function ProfilePageFormJasa() {
             className='text-xs bg-yellow-500 rounded-lg flex items-center px-2 py-1 gap-1 text-white'
             onClick={() => {
               const count = imageCount + 1;
-              console.log("count", count);
               setImageList([
                 {
                   value: "",

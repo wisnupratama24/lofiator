@@ -2,8 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Layout, Navbar } from "~/components";
 import Head from "next/head";
 import { authenticateRoute } from "~/lib/authenticate";
-import { IUserModel, MODAL_FORM_JASA } from "./utils/types";
-import { fetchUserDetail } from "./utils/api";
+import {
+  IFeedModel,
+  IInitialValuesJasa,
+  IUserModel,
+  MODAL_FORM_JASA,
+} from "./utils/types";
+import { deleteJasa, fetchListJasa, fetchUserDetail } from "./utils/api";
 import styles from "./ProfilePage.module.scss";
 import ProfileUserCard from "./ProfileUserCard";
 import FormUpdateProfile from "./FormUpdateProfile";
@@ -11,6 +16,7 @@ import DefaultButton from "~/components/button/DefaultButton";
 import ProfilePageListJasa from "./ProfilePageListJasa";
 import { openModal } from "~/components/modal/DefaultModal";
 import ProfilePageFormJasa from "./ProfilePageFormJasa";
+import { toastError, toastSucces } from "~/lib/helpers";
 
 const initialUser: IUserModel = {
   name: "",
@@ -23,6 +29,24 @@ const initialUser: IUserModel = {
 
 function ProfilePage() {
   const [user, setUser] = useState<IUserModel>(initialUser);
+  const [initialJasa, setInitialJasa] = useState<IInitialValuesJasa>({
+    id: "",
+    title: "",
+    description: "",
+    waktu_panen: [],
+    jenis_budidaya: [],
+  });
+
+  const [rowsJasa, setRowsJasa] = useState<IFeedModel[]>([]);
+
+  const setListJasa = async () => {
+    const response = await fetchListJasa();
+    if (response.state) {
+      setRowsJasa(response.data);
+    } else {
+      setRowsJasa([]);
+    }
+  };
 
   const fetchUser = async () => {
     try {
@@ -38,6 +62,27 @@ function ProfilePage() {
   useEffect(() => {
     fetchUser();
   }, []);
+
+  const handleClickUpdateJasa = async (row: IFeedModel) => {
+    setInitialJasa({
+      title: row.title,
+      description: row.description,
+      waktu_panen: row.harvest_time.split(","),
+      jenis_budidaya: row.type_cultivation.split(","),
+      id: row.id,
+    });
+    openModal(MODAL_FORM_JASA);
+  };
+
+  const handleClickDeleteJasa = async (id: string) => {
+    const response = await deleteJasa(id);
+    if (response.state) {
+      toastSucces(response.message);
+      setListJasa();
+    } else {
+      toastError(response.message);
+    }
+  };
 
   return (
     <>
@@ -73,12 +118,20 @@ function ProfilePage() {
             />
           </div>
 
-          <ProfilePageListJasa />
+          <ProfilePageListJasa
+            handleClickUpdate={handleClickUpdateJasa}
+            handleClickDelete={handleClickDeleteJasa}
+            setListJasa={setListJasa}
+            rows={rowsJasa}
+          />
         </section>
       </Layout>
 
       <FormUpdateProfile user={user} fetchUser={fetchUser} />
-      <ProfilePageFormJasa />
+      <ProfilePageFormJasa
+        initialValues={initialJasa}
+        setListJasa={setListJasa}
+      />
     </>
   );
 }

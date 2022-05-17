@@ -47,11 +47,13 @@ function DefaultModal({
   children,
   title,
   maxWidth = "100%",
+  disabled = false,
 }: {
   target: string;
   children: React.ReactNode;
   title: string;
   maxWidth?: string;
+  disabled?: boolean;
 }) {
   return (
     <>
@@ -88,6 +90,7 @@ function DefaultModal({
             <div className='flex justify-end pt-2 items-center'>
               <div>
                 <button
+                  disabled={disabled}
                   type='submit'
                   className='bg-transparent px-4 py-2 text-xs rounded-md text-indigo-500 hover:bg-gray-100 hover:text-indigo-400 mr-2'>
                   Simpan

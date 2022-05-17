@@ -21,7 +21,7 @@ export const fetchListJasa =  async () => {
         const response = await setupApi.get('/feed');
         return {
             state : true,
-            data : response.data.data
+            data : response.data.data.data
         }
     } catch (error) {
         return {
@@ -34,4 +34,27 @@ export const fetchListJasa =  async () => {
 
 export const updateUser = (formData: any ) => {
     return  setupApi.post('/user/update', formData)    
+}
+
+export const createJasa = (formData : any) => {
+    return setupApi.post('/feed/save', formData)
+}
+
+export const updateJasa = (formData : any, id: string) => {
+    return setupApi.post(`/feed/update/${id}`, formData)
+}
+
+export const deleteJasa = async (id: string) => {
+    try {
+        await setupApi.delete(`/feed/delete/${id}`);
+        return {
+            state : true,
+            message : 'Berhasil'
+        }
+    } catch (error) {
+        return {
+            state: false,
+            message : "Gagal"
+        }
+    }
 }

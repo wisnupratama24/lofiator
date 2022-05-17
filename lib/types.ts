@@ -16,55 +16,55 @@ export interface ITableHead {
 
 export const waktuPanenList = [
   {
-    value : "sepanjang tahun",
+    value : "Sepanjang tahun",
     label : "Sepanjang Tahun",
   },
    {
-    value : "januari",
+    value : "Januari",
     label : "Januari",
   },
    {
-    value : "februari",
+    value : "Februari",
     label : "Februari",
   },
   {
-    value : "maret",
+    value : "Maret",
     label : "Maret",
   },
   {
-    value : "april",
+    value : "April",
     label : "April",
   },
   {
-    value : "mei",
+    value : "Mei",
     label : "Mei",
   },
   {
-    value : "juni",
+    value : "Juni",
     label : "Juni",
   },
   {
-    value : "juli",
+    value : "Juli",
     label : "Juli",
   },
   {
-    value : "agustus",
+    value : "Agustus",
     label : "Agustus",
   },
   {
-    value : "september",
+    value : "September",
     label : "September",
   },
   {
-    value : "oktober",
+    value : "Oktober",
     label : "Oktober",
   },
   {
-    value : "november",
+    value : "November",
     label : "November",
   },
   {
-    value : "desember",
+    value : "Desember",
     label : "Desember",
   },
 ]
