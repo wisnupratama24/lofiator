@@ -58,3 +58,42 @@ export const deleteJasa = async (id: string) => {
         }
     }
 }
+
+
+export const fetchListPenawaran =  async () => {
+    try {
+        const response = await setupApi.get('/service');
+        return {
+            state : true,
+            data : response.data.data.data
+        }
+    } catch (error) {
+        return {
+            state: false,
+            data : []
+        }
+    }
+}
+
+export const createPenawaran = (formData : any) => {
+    return setupApi.post('/service/save', formData)
+}
+
+export const updatePenawaran = (formData : any, id : string) => {
+    return setupApi.post(`/service/update/${id}`, formData)
+}
+
+export const deletePenawaran = async (id: string) => {
+    try {
+        await setupApi.delete(`/service/delete/${id}`);
+        return {
+            state : true,
+            message : 'Berhasil'
+        }
+    } catch (error) {
+        return {
+            state: false,
+            message : "Gagal"
+        }
+    }
+}

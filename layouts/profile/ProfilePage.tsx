@@ -5,10 +5,19 @@ import { authenticateRoute } from "~/lib/authenticate";
 import {
   IFeedModel,
   IInitialValuesJasa,
+  IInitialValuesPenawaran,
+  IServiceModel,
   IUserModel,
   MODAL_FORM_JASA,
+  MODAL_FORM_PENAWARAN,
 } from "./utils/types";
-import { deleteJasa, fetchListJasa, fetchUserDetail } from "./utils/api";
+import {
+  deleteJasa,
+  deletePenawaran,
+  fetchListJasa,
+  fetchListPenawaran,
+  fetchUserDetail,
+} from "./utils/api";
 import styles from "./ProfilePage.module.scss";
 import ProfileUserCard from "./ProfileUserCard";
 import FormUpdateProfile from "./FormUpdateProfile";
@@ -17,6 +26,8 @@ import ProfilePageListJasa from "./ProfilePageListJasa";
 import { openModal } from "~/components/modal/DefaultModal";
 import ProfilePageFormJasa from "./ProfilePageFormJasa";
 import { toastError, toastSucces } from "~/lib/helpers";
+import ProfilePageListPenawaran from "./ProfilePageListPenawaran";
+import ProfilePageFormPenawaran from "./ProfilePageFormPenawaran";
 
 const initialUser: IUserModel = {
   name: "",
@@ -37,7 +48,21 @@ function ProfilePage() {
     jenis_budidaya: [],
   });
 
+  const [initialPenawaran, setInitialPenawaran] =
+    useState<IInitialValuesPenawaran>({
+      id: "",
+      name: "",
+      min_budget: "",
+      max_budget: "",
+      status: "draft",
+      weight: "",
+      description: "",
+      publish_date: "",
+      publish_limit: "",
+    });
+
   const [rowsJasa, setRowsJasa] = useState<IFeedModel[]>([]);
+  const [rowsPenawaran, setRowsPenawaran] = useState<IServiceModel[]>([]);
 
   const setListJasa = async () => {
     const response = await fetchListJasa();
@@ -45,6 +70,15 @@ function ProfilePage() {
       setRowsJasa(response.data);
     } else {
       setRowsJasa([]);
+    }
+  };
+
+  const setListPenawaran = async () => {
+    const response = await fetchListPenawaran();
+    if (response.state) {
+      setRowsPenawaran(response.data);
+    } else {
+      setRowsPenawaran([]);
     }
   };
 
@@ -79,6 +113,31 @@ function ProfilePage() {
     if (response.state) {
       toastSucces(response.message);
       setListJasa();
+    } else {
+      toastError(response.message);
+    }
+  };
+
+  const handleClickUpdatePenawaran = async (row: IServiceModel) => {
+    setInitialPenawaran({
+      name: row.name,
+      description: row.description,
+      publish_date: row.publish_date,
+      publish_limit: row.publish_limit,
+      min_budget: row.min_budget,
+      max_budget: row.max_budget,
+      status: row.status,
+      id: row.id,
+      weight: row.weight,
+    });
+    openModal(MODAL_FORM_PENAWARAN);
+  };
+
+  const handleClickDeletePenawaran = async (id: string) => {
+    const response = await deletePenawaran(id);
+    if (response.state) {
+      toastSucces(response.message);
+      setListPenawaran();
     } else {
       toastError(response.message);
     }
@@ -125,12 +184,37 @@ function ProfilePage() {
             rows={rowsJasa}
           />
         </section>
+
+        <section className={styles.ProfilePagePenawaran}>
+          <div className='flex justify-between h-8 mb-4'>
+            <div>
+              <p className='text-base font-medium'>List Penawawan</p>
+            </div>
+            <DefaultButton
+              label='Tambah'
+              className='bg-indigo-500 hover:bg-indigo-700'
+              onClick={() => openModal(MODAL_FORM_PENAWARAN)}
+            />
+          </div>
+
+          <ProfilePageListPenawaran
+            handleClickUpdate={handleClickUpdatePenawaran}
+            handleClickDelete={handleClickDeletePenawaran}
+            setListPenawaran={setListPenawaran}
+            rows={rowsPenawaran}
+          />
+        </section>
       </Layout>
 
       <FormUpdateProfile user={user} fetchUser={fetchUser} />
       <ProfilePageFormJasa
         initialValues={initialJasa}
         setListJasa={setListJasa}
+      />
+
+      <ProfilePageFormPenawaran
+        initialValues={initialPenawaran}
+        setListPenawaran={setListPenawaran}
       />
     </>
   );

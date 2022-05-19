@@ -1,4 +1,3 @@
-import { number } from "yup";
 
 export interface IUserModel {
     name : string,
@@ -18,6 +17,20 @@ export interface IInitialValuesJasa {
 
 }
 
+export interface IInitialValuesPenawaran {
+    id: string | number,
+    name: string;
+    description: string;
+    min_budget: string;
+    max_budget: string;
+    weight: string;
+    status: string;
+    publish_date: string;
+    publish_limit: string;
+
+
+}
+
 export interface IFeedModel {
     id : number,
     title : string,
@@ -27,4 +40,18 @@ export interface IFeedModel {
     description : string
 }
 
+export interface IServiceModel {
+    id : number,
+    name : string,
+    min_budget : string,
+    max_budget: string,
+    publish_date: string
+    publish_limit: string
+    weight: string
+    status: string
+    description : string
+}
+
 export const MODAL_FORM_JASA = 'modal-form-jasa'
+export const MODAL_FORM_PENAWARAN = 'modal-form-penawaran'
+
