@@ -26,8 +26,7 @@ export interface IInitialValuesPenawaran {
     weight: string;
     status: string;
     publish_date: string;
-    publish_limit: string;
-
+    publish_limit: string
 
 }
 
@@ -38,6 +37,8 @@ export interface IFeedModel {
     harvest_time: string,
     type_cultivation: string
     description : string
+    user_name : string
+    image: string
 }
 
 export interface IServiceModel {
@@ -50,6 +51,8 @@ export interface IServiceModel {
     weight: string
     status: string
     description : string
+    total_penawaran: number,
+    image: string,
 }
 
 export const MODAL_FORM_JASA = 'modal-form-jasa'

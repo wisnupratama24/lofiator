@@ -7,14 +7,7 @@ const ProfilePage = dynamic(() => import("~/layouts/profile/ProfilePage"), {
 });
 
 import { ErrorBoundary } from "react-error-boundary";
-
-function ErrorFallback() {
-  return (
-    <div role='alert'>
-      <p>Something went wrong:</p>
-    </div>
-  );
-}
+import { ErrorFallback } from "~/components/ErrorBoundaries";
 
 function Profile() {
   return (

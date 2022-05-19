@@ -29,12 +29,12 @@ function DefaultButton({
     <>
       {isLink ? (
         <Link href={typeof href !== "undefined" ? href : ""}>
-          <div
+          <a
             className={`py-2 px-3 ease-in delay-75 rounded text-xs cursor-pointer transition-all ${
               disabled ? "bg-gray-400 text-white" : classNameOutline
             } ${className}`}>
             {label}
-          </div>
+          </a>
         </Link>
       ) : (
         <button

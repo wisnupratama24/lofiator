@@ -32,3 +32,11 @@ class ErrorBoundary extends Component<Props, State> {
 }
 
 export default ErrorBoundary;
+
+export function ErrorFallback() {
+  return (
+    <div role='alert'>
+      <p>Something went wrong:</p>
+    </div>
+  );
+}

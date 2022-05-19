@@ -1,7 +1,8 @@
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { PROFILE_PAGE, REGISTER_PAGE } from "~/constants/page";
+import { getCookieUser } from "~/lib/helpers";
 import { RootState } from "~/redux/RootReducers";
 import { Logo } from "..";
 import DefaultButton from "../button/DefaultButton";
@@ -24,9 +25,46 @@ const navItems = [
 ];
 
 function Navbar() {
-  const pageInit = useSelector<RootState>(
-    ({ pageInit }) => pageInit
-  ) as IInitialStatePageInit;
+  // const pageInit = useSelector<RootState>(
+  //   ({ pageInit }) => pageInit
+  // ) as IInitialStatePageInit;
+
+  const [pageInit, setPageInit] = useState<IInitialStatePageInit>({
+    isAuthorized: false,
+    name: "",
+  });
+
+  useEffect(() => {
+    const cookie = getCookieUser();
+    if (cookie) {
+      setPageInit({
+        isAuthorized: true,
+        name: cookie.name,
+      });
+    }
+  }, []);
+
+  const ButtonChecked = () => {
+    if (pageInit.isAuthorized) {
+      return (
+        <div>
+          <Link href={PROFILE_PAGE}>
+            <a>{pageInit.name}</a>
+          </Link>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <DefaultButton
+            label='Daftar Sekarang'
+            isLink={true}
+            href={REGISTER_PAGE}
+          />
+        </div>
+      );
+    }
+  };
 
   return (
     <section>
@@ -44,17 +82,7 @@ function Navbar() {
             })}
           </ul>
 
-          <div>
-            {pageInit.isAuthorized ? (
-              <Link href={PROFILE_PAGE}>{pageInit.name}</Link>
-            ) : (
-              <DefaultButton
-                label='Daftar Sekarang'
-                isLink={true}
-                href={REGISTER_PAGE}
-              />
-            )}
-          </div>
+          <ButtonChecked />
         </header>
       </div>
     </section>

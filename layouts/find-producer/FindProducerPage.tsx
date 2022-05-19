@@ -2,49 +2,17 @@ import Head from "next/head";
 import React from "react";
 import { Layout, Navbar } from "~/components";
 import Filter from "~/components/filters/Filter";
-import CardItemPriducer from "./CardItemProducer";
+import { IFeedModel } from "../profile/utils/types";
+import CardItemProducer from "./CardItemProducer";
 import styles from "./FindProducer.module.scss";
 
-export interface IProducerItemsList {
-  title: string;
-  desc: string;
-  user: string;
-  waktu_panen: string;
-  jenis_budidaya: string;
-}
-
-const producerItemLists: IProducerItemsList[] = [
-  {
-    title: "Saya menyediakan ikan bandeng segar, skala kecil dan besar",
-    desc: "Saya merupakan pembudidaya ikan bandeng di desa prapag kidul kecamatan Losari Kabupaten Brebes. Untuk melihat lebih jauh silahkan datang ke lokasi saya",
-    user: "Wisnu Pratama",
-    waktu_panen: "Maret, Juli",
-    jenis_budidaya: "Bandeng, Mujair, Gurame",
-  },
-  {
-    title: "Saya menyediakan ikan bandeng segar, skala kecil dan besar",
-    desc: "Saya merupakan pembudidaya ikan bandeng di desa prapag kidul kecamatan Losari Kabupaten Brebes. Untuk melihat lebih jauh silahkan datang ke lokasi saya",
-    user: "Wisnu Pratama",
-    waktu_panen: "Maret, Juli",
-    jenis_budidaya: "Bandeng, Mujair, Gurame",
-  },
-  {
-    title: "Saya menyediakan ikan bandeng segar, skala kecil dan besar",
-    desc: "Saya merupakan pembudidaya ikan bandeng di desa prapag kidul kecamatan Losari Kabupaten Brebes. Untuk melihat lebih jauh silahkan datang ke lokasi saya",
-    user: "Wisnu Pratama",
-    waktu_panen: "Maret, Juli",
-    jenis_budidaya: "Bandeng, Mujair, Gurame",
-  },
-  {
-    title: "Saya menyediakan ikan bandeng segar, skala kecil dan besar",
-    desc: "Saya merupakan pembudidaya ikan bandeng di desa prapag kidul kecamatan Losari Kabupaten Brebes. Untuk melihat lebih jauh silahkan datang ke lokasi saya",
-    user: "Wisnu Pratama",
-    waktu_panen: "Maret, Juli",
-    jenis_budidaya: "Bandeng, Mujair, Gurame",
-  },
-];
-
-function FindProducerPage() {
+function FindProducerPage({
+  producerList,
+  formik,
+}: {
+  producerList: IFeedModel[];
+  formik: any;
+}) {
   return (
     <>
       <>
@@ -59,19 +27,22 @@ function FindProducerPage() {
 
           <section className={styles.FindProducerPageContent}>
             <div>
-              <Filter />
+              <Filter formik={formik} />
             </div>
 
             <div>
-              {producerItemLists.map((item, index) => {
+              {producerList.map((item, index) => {
                 return (
-                  <CardItemPriducer
+                  <CardItemProducer
                     key={index}
-                    waktu_panen={item.waktu_panen}
-                    jenis_budidaya={item.jenis_budidaya}
-                    user={item.user}
-                    desc={item.desc}
                     title={item.title}
+                    description={item.description}
+                    harvest_time={item.harvest_time}
+                    type_cultivation={item.type_cultivation}
+                    user_name={item.user_name}
+                    image={item.image}
+                    id={item.id}
+                    createdAt={item.createdAt}
                   />
                 );
               })}
