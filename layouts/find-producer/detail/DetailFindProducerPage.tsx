@@ -3,9 +3,19 @@ import React from "react";
 import { Layout, Navbar } from "~/components";
 import DefaultButton from "~/components/button/DefaultButton";
 import OtherOffer from "~/layouts/find-culvitator/detail/OtherOffer";
+import { differentDayWithNow, toDayIndo } from "~/lib/helpers";
+import { BASE_URL } from "~/lib/setupApi";
+import { IFeedDetailModel } from "../utils/types";
 import styles from "./DetailFindProducer.module.scss";
+import moment from "moment";
 
-function DetailFindProducerPage() {
+interface IPropsDetailFindProducerPage {
+  producerDetail: IFeedDetailModel;
+}
+
+function DetailFindProducerPage({
+  producerDetail,
+}: IPropsDetailFindProducerPage) {
   return (
     <>
       <Head>
@@ -21,22 +31,16 @@ function DetailFindProducerPage() {
           <div className={styles.DetailFindProducerPageCardOffer}>
             <div className='bg-white p-4'>
               <div>
-                <h5 className='text-lg'>
-                  Saya menyediakan ikan bandeng segar, skala kecil dan besar
-                </h5>
-                <span className='text-xs text-gray-300'>4 days ago</span>
+                <h5 className='text-lg'>{producerDetail.feed.title}</h5>
+                <span className='text-xs text-gray-300'>
+                  {differentDayWithNow(producerDetail.user.created_at)}
+                </span>
               </div>
 
               <div className='bg-gray-200 h-60 w-11/12 mt-5'></div>
 
               <p className='text-gray-500 mt-5 text-sm w-10/12'>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Id
-                mollitia quisquam magni assumenda voluptatem expedita, amet
-                reiciendis non laborum asperiores consectetur ea odit omnis
-                dolorem officia possimus! Repellat doloremque nemo porro,
-                quibusdam nam sapiente iure maiores vitae. Laboriosam voluptates
-                exercitationem eos dolor. Fuga ipsam reprehenderit reiciendis
-                aliquam voluptatem, soluta quidem?
+                {producerDetail.feed.description}
               </p>
 
               <table className={`${styles.CardItemOfferTable} mt-5 md:w-6/12`}>
@@ -44,14 +48,18 @@ function DetailFindProducerPage() {
                   <tr>
                     <td className='text-gray-700 font-semibold'>Waktu Panen</td>
                     <td width={"5%"}></td>
-                    <td className='text-gray-500'>Juni, Maret</td>
+                    <td className='text-gray-500'>
+                      {producerDetail.feed.harvest_time}
+                    </td>
                   </tr>
                   <tr>
                     <td className='text-gray-700 font-semibold'>
                       Jenis Budidaya
                     </td>
                     <td width={"5%"}></td>
-                    <td className='text-gray-500'>Mujair, Bandeng</td>
+                    <td className='text-gray-500'>
+                      {producerDetail.feed.type_cultivation}
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -67,15 +75,21 @@ function DetailFindProducerPage() {
 
               <div className='mt-5'>
                 <div className='flex gap-3 items-center'>
-                  <div className='rounded-full bg-gray-300 h-16 w-16'></div>
+                  <div className='rounded-full bg-gray-300'>
+                    <img
+                      src={`${BASE_URL}/${producerDetail.user.image}`}
+                      alt={`Profile User ${producerDetail.user.name}`}
+                      className='rounded-full h-20 w-20'
+                    />
+                  </div>
                   <div>
-                    <p className='text-sm'>Wisnu Pratama</p>
+                    <p className='text-sm'>{producerDetail.user.name}</p>
                     <p
                       className='text-gray-400 text-sm'
                       style={{
                         fontWeight: "300",
                       }}>
-                      085700924165
+                      {producerDetail.user.no_hp}
                     </p>
                   </div>
                 </div>
@@ -89,9 +103,19 @@ function DetailFindProducerPage() {
                         <td className='text-gray-400'>Terdaftar Sejak</td>
                       </tr>
                       <tr>
-                        <td className='text-gray-600'>Brebes</td>
                         <td className='text-gray-600'>
-                          Selasa, 27 Januari 2020
+                          {producerDetail.user.city}
+                        </td>
+                        <td className='text-gray-600'>
+                          {toDayIndo(
+                            moment(producerDetail.user.created_at)
+                              .local()
+                              .format("dddd")
+                          )}
+                          ,{" "}
+                          {moment(producerDetail.user.created_at).format(
+                            "DD MMMM YYYY"
+                          )}
                         </td>
                       </tr>
                     </tbody>
@@ -104,11 +128,7 @@ function DetailFindProducerPage() {
                   style={{
                     fontWeight: "300",
                   }}>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Blanditiis recusandae facere et rerum? Corrupti aperiam labore
-                  totam esse est molestias eveniet at alias impedit quos sint
-                  aliquid, in, incidunt aut sequi. A vero, saepe esse molestias
-                  dolore commodi dolor voluptatibus.
+                  {producerDetail.user.description}
                 </p>
               </div>
             </div>

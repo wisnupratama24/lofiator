@@ -65,3 +65,36 @@ export function formatNumber(number:string|number) {
     );
   }
 }
+
+export function toDayIndo(day: string) {
+  let hari;
+  const day2 = day.toLowerCase();
+  switch (day2) {
+    case "monday":
+      hari = "Senin";
+      break;
+    case "tuesday":
+      hari = "Selasa";
+      break;
+    case "wednesday":
+      hari = "Rabu";
+      break;
+    case "thursday":
+      hari = "Kamis";
+      break;
+    case "friday":
+      hari = "Jumat";
+      break;
+    case "saturday":
+      hari = "Sabtu";
+      break;
+    case "sunday":
+      hari = "Minggu";
+      break;
+    default:
+      hari = "wrong day";
+      break;
+  }
+
+  return hari;
+}

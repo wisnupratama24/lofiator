@@ -6,6 +6,7 @@ export interface IUserModel {
     city : string,
     image : string
     description : string
+    created_at : string
 }
 
 export interface IInitialValuesJasa {
@@ -53,6 +54,11 @@ export interface IServiceModel {
     description : string
     total_penawaran: number,
     image: string,
+    user_name?: string
+    city?: string
+    serviceAt?: string
+
+
 }
 
 export const MODAL_FORM_JASA = 'modal-form-jasa'

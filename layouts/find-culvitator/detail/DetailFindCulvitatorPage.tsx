@@ -2,10 +2,20 @@ import Head from "next/head";
 import React from "react";
 import { Layout, Navbar } from "~/components";
 import DefaultButton from "~/components/button/DefaultButton";
+import { defaultDateDisplay, differentDayWithNow } from "~/lib/helpers";
+import { BASE_URL } from "~/lib/setupApi";
+import { IServiceDetailModel } from "../utils/types";
 import styles from "./DetailFindCulvitator.module.scss";
 import OtherOffer from "./OtherOffer";
 
-function DetailFindCulvitatorPage() {
+interface IPropsDetailFindCulvitatorPage {
+  serviceDetail: IServiceDetailModel;
+}
+
+function DetailFindCulvitatorPage({
+  serviceDetail,
+}: IPropsDetailFindCulvitatorPage) {
+  console.log(serviceDetail);
   return (
     <>
       <Head>
@@ -25,21 +35,14 @@ function DetailFindCulvitatorPage() {
           <div className={styles.DetailFindCulvitatorCardOffer}>
             <div className='bg-white p-4'>
               <div>
-                <h5 className='text-lg'>
-                  Saya membutuhkan ikan bandeng sebanyak 3 ton, pada bulan
-                  Januari.
-                </h5>
-                <span className='text-xs text-gray-300'>4 days ago</span>
+                <h5 className='text-lg'>{serviceDetail?.service.name}</h5>
+                <span className='text-xs text-gray-300'>
+                  {differentDayWithNow(serviceDetail?.service.publish_date)}
+                </span>
               </div>
 
               <p className='text-gray-500 mt-5 text-sm w-10/12'>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Id
-                mollitia quisquam magni assumenda voluptatem expedita, amet
-                reiciendis non laborum asperiores consectetur ea odit omnis
-                dolorem officia possimus! Repellat doloremque nemo porro,
-                quibusdam nam sapiente iure maiores vitae. Laboriosam voluptates
-                exercitationem eos dolor. Fuga ipsam reprehenderit reiciendis
-                aliquam voluptatem, soluta quidem?
+                {serviceDetail?.service.description}
               </p>
 
               <table className={`${styles.CardItemOfferTable} mt-5 md:w-10/12`}>
@@ -49,20 +52,32 @@ function DetailFindCulvitatorPage() {
                       Published Date
                     </td>
                     <td width={"5%"}></td>
-                    <td className='text-gray-500'>18/09/2021 12:15:22</td>
+                    <td className='text-gray-500'>
+                      {defaultDateDisplay(
+                        serviceDetail.service.publish_date,
+                        false
+                      )}
+                    </td>
 
                     <td className='text-gray-700 font-semibold'>
                       Total Tawaran
                     </td>
                     <td width={"5%"}></td>
-                    <td className='text-gray-500'>3</td>
+                    <td className='text-gray-500'>
+                      {serviceDetail?.service.total_penawaran}
+                    </td>
                   </tr>
                   <tr>
                     <td className='text-gray-700 font-semibold'>
                       Published Budget
                     </td>
                     <td width={"5%"}></td>
-                    <td className='text-gray-500'>Rp. 16.000 - 20.000 /Kg</td>
+
+                    <td className='text-gray-500'>
+                      {serviceDetail?.service.min_budget} -{" "}
+                      {serviceDetail?.service.max_budget} /
+                      {serviceDetail?.service.weight}
+                    </td>
 
                     <td className='text-gray-700 font-semibold'>Status</td>
                     <td width={"5%"}></td>
@@ -72,30 +87,38 @@ function DetailFindCulvitatorPage() {
                         style={{
                           backgroundColor: "#40B8DE",
                         }}>
-                        Published
+                        {serviceDetail?.service.status.toUpperCase()}
                       </div>
                     </td>
                   </tr>
                   <tr>
                     <td className='text-gray-700 font-semibold'>Deadline</td>
                     <td width={"5%"}></td>
-                    <td className='text-gray-500'>18/09/2021 12:15:22</td>
+                    <td className='text-gray-500'>
+                      {serviceDetail?.service.publish_limit}
+                    </td>
                   </tr>
                 </tbody>
               </table>
 
               <div className='mt-8 flex justify-between items-center'>
                 <div className='flex gap-3 items-center'>
-                  <div className='bg-gray-300 h-16 w-16'></div>
+                  <div className=' h-16 w-16'>
+                    <img
+                      src={`${BASE_URL}/${serviceDetail.service.image}`}
+                      alt={`Profile User ${serviceDetail.service.user_name}`}
+                      className='max-h-16'
+                    />
+                  </div>
                   <div>
                     <p className='text-sm font-medium text-gray-800'>
-                      Wisnu Pratama
+                      {serviceDetail?.service.user_name}
                     </p>
                     <p className='text-xs font-light text-gray-500 mt-1'>
-                      Surabaya
+                      {serviceDetail?.service.city}
                     </p>
                     <p className='text-xs font-light text-gray-500 mt-1'>
-                      Tawaran ke-10
+                      Tawaran ke-{serviceDetail?.service.serviceAt}
                     </p>
                   </div>
                 </div>
@@ -118,40 +141,32 @@ function DetailFindCulvitatorPage() {
                 User yang sudah melakukan penawaran
               </p>
               <div className={styles.DetailFindCulvitatorUserOffer}>
-                <div className='flex gap-3 items-center'>
-                  <div className='bg-gray-300 h-16 w-16'></div>
-                  <div>
-                    <p className='text-sm font-medium text-gray-800'>
-                      Wisnu Pratama
-                    </p>
-                    <p className='text-xs font-light text-gray-500 mt-1'>
-                      Surabaya
-                    </p>
-                  </div>
-                </div>
-                <div className='flex gap-3 items-center'>
-                  <div className='bg-gray-300 h-16 w-16'></div>
-                  <div>
-                    <p className='text-sm font-medium text-gray-800'>
-                      Wisnu Pratama
-                    </p>
-                    <p className='text-xs font-light text-gray-500 mt-1'>
-                      Surabaya
-                    </p>
-                  </div>
-                </div>
-                <div className='flex gap-3 items-center'>
-                  <div className='bg-gray-300 h-16 w-16'></div>
-                  <div>
-                    <p className='text-sm font-medium text-gray-800'>
-                      Wisnu Pratama
-                    </p>
-                    <p className='text-xs font-light text-gray-500 mt-1'>
-                      Surabaya
-                    </p>
-                  </div>
-                </div>
+                {serviceDetail.service_offers.map((serviceOffer, index) => {
+                  return (
+                    <div className='flex gap-3 items-center' key={index}>
+                      <div className='bg-gray-300 h-16 w-16'>
+                        <img
+                          src={`${BASE_URL}/${serviceOffer.image}`}
+                          alt={`Profile User Tawar ${serviceOffer.name}`}
+                          className='max-h-16'
+                        />
+                      </div>
+                      <div>
+                        <p className='text-sm font-medium text-gray-800'>
+                          {serviceOffer.name}
+                        </p>
+                        <p className='text-xs font-light text-gray-500 mt-1'>
+                          {serviceOffer.city}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
+
+              {serviceDetail.service_offers.length === 0 && (
+                <p className='text-center text-sm'>Jadilah penawar pertama!</p>
+              )}
             </div>
           </div>
         </section>

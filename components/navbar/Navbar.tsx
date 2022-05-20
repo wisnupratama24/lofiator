@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { PROFILE_PAGE, REGISTER_PAGE } from "~/constants/page";
 import { getCookieUser } from "~/lib/helpers";
-import { RootState } from "~/redux/RootReducers";
 import { Logo } from "..";
 import DefaultButton from "../button/DefaultButton";
 import { IInitialStatePageInit } from "../pageInit/reducer";
@@ -12,7 +11,7 @@ import styles from "./Navbar.module.scss";
 const navItems = [
   {
     name: "Temukan Supplier",
-    link: "/find-culvitator",
+    link: "/find-cultivator",
   },
   {
     name: "Temukan Produsen",

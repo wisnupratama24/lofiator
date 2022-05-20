@@ -1,33 +1,33 @@
 import dynamic from "next/dynamic";
 import React, { Suspense, useState } from "react";
 import { ErrorFallback } from "~/components/ErrorBoundaries";
-import { fetchFeedDetailProducer } from "~/layouts/find-producer/utils/api";
-import { IFeedDetailModel } from "~/layouts/find-producer/utils/types";
+import { fetchFeedDetailService } from "~/layouts/find-culvitator/utils/api";
+import { IServiceDetailModel } from "~/layouts/find-culvitator/utils/types";
 import { LayoutSplashScreen, redirectTo } from "~/lib/authenticate";
 import { isEmpty } from "~/lib/helpers";
 import { ErrorBoundary } from "react-error-boundary";
 
-const DetailFindProducerPage = dynamic(
-  () => import("~/layouts/find-producer/detail/DetailFindProducerPage"),
+const DetailFindCulvitatorPage = dynamic(
+  () => import("~/layouts/find-culvitator/detail/DetailFindCulvitatorPage"),
   {
     suspense: true,
   }
 );
 
-interface IPropsDetailFindProducer {
-  data: IFeedDetailModel | null;
+interface IPropsDetailFindCulvitator {
+  data: IServiceDetailModel | null;
 }
 
-function DetailFindProducer({ data }: IPropsDetailFindProducer) {
-  const [producerDetail, setproducerDetail] = useState(data);
+function DetailFindCulvitator({ data }: IPropsDetailFindCulvitator) {
+  const [serviceDetail, setServiceDetail] = useState(data);
   if (isEmpty(data)) {
-    redirectTo("/find-producer");
+    redirectTo("/find-cultivator");
     return <></>;
   } else {
     return (
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Suspense fallback={<LayoutSplashScreen />}>
-          <DetailFindProducerPage producerDetail={producerDetail} />
+          <DetailFindCulvitatorPage serviceDetail={serviceDetail} />
         </Suspense>
       </ErrorBoundary>
     );
@@ -35,10 +35,10 @@ function DetailFindProducer({ data }: IPropsDetailFindProducer) {
 }
 
 export async function getServerSideProps(context: any) {
-  const response = await fetchFeedDetailProducer(context.params.title);
+  const response = await fetchFeedDetailService(context.params.title);
   return {
     props: { data: response.state ? response.data : null },
   };
 }
 
-export default DetailFindProducer;
+export default DetailFindCulvitator;

@@ -20,6 +20,7 @@ function CardItemOffer({
   status,
   image,
   total_penawaran,
+  id,
 }: IServiceModel) {
   return (
     <div className={styles.CardItemOffer}>
@@ -82,7 +83,11 @@ function CardItemOffer({
         </table>
 
         <div className='mt-7 flex gap-4'>
-          <DefaultButton label='Lihat Selengkapnya' />
+          <DefaultButton
+            label='Lihat Selengkapnya'
+            isLink={true}
+            href={`/find-cultivator/${id}`}
+          />
           <DefaultButton label='Ajukan Tawaran' outline={true} />
         </div>
       </div>

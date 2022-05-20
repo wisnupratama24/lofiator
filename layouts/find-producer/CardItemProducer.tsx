@@ -11,6 +11,7 @@ function CardItemProducer({
   type_cultivation,
   user_name,
   image,
+  id,
 }: IFeedModel) {
   return (
     <div className={styles.CardItemProducer}>
@@ -44,7 +45,11 @@ function CardItemProducer({
         </table>
 
         <div className='mt-7 flex gap-4'>
-          <DefaultButton label='Lihat Selengkapnya' />
+          <DefaultButton
+            label='Lihat Selengkapnya'
+            isLink={true}
+            href={`/find-producer/${id}`}
+          />
           <DefaultButton label='Hubungi Saya' outline={true} />
         </div>
       </div>
