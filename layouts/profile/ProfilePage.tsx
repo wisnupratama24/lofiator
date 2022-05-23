@@ -28,6 +28,7 @@ import ProfilePageFormJasa from "./ProfilePageFormJasa";
 import { toastError, toastSucces } from "~/lib/helpers";
 import ProfilePageListPenawaran from "./ProfilePageListPenawaran";
 import ProfilePageFormPenawaran from "./ProfilePageFormPenawaran";
+import { fetchFeedDetailProducer } from "../find-producer/utils/api";
 
 const initialUser: IUserModel = {
   name: "",
@@ -36,17 +37,23 @@ const initialUser: IUserModel = {
   image: "",
   description: "",
   email: "",
+  created_at: "",
+};
+
+export const initialFormJasa: IInitialValuesJasa = {
+  id: "",
+  title: "",
+  description: "",
+  waktu_panen: [],
+  jenis_budidaya: [],
+  image_count: 1,
+  image_list: [],
 };
 
 function ProfilePage() {
   const [user, setUser] = useState<IUserModel>(initialUser);
-  const [initialJasa, setInitialJasa] = useState<IInitialValuesJasa>({
-    id: "",
-    title: "",
-    description: "",
-    waktu_panen: [],
-    jenis_budidaya: [],
-  });
+  const [initialJasa, setInitialJasa] =
+    useState<IInitialValuesJasa>(initialFormJasa);
 
   const [initialPenawaran, setInitialPenawaran] =
     useState<IInitialValuesPenawaran>({
@@ -98,14 +105,31 @@ function ProfilePage() {
   }, []);
 
   const handleClickUpdateJasa = async (row: IFeedModel) => {
-    setInitialJasa({
-      title: row.title,
-      description: row.description,
-      waktu_panen: row.harvest_time.split(","),
-      jenis_budidaya: row.type_cultivation.split(","),
-      id: row.id,
-    });
-    openModal(MODAL_FORM_JASA);
+    const response = await fetchFeedDetailProducer(row.id.toString());
+    if (response.state) {
+      const imageList = [];
+
+      response.data.images.map((image, index) => {
+        return imageList.push({
+          value: "",
+          src: image.image,
+          index: index + 1,
+          id: image.id,
+        });
+      });
+
+      setInitialJasa({
+        title: row.title,
+        description: row.description,
+        waktu_panen: row.harvest_time.split(","),
+        jenis_budidaya: row.type_cultivation.split(","),
+        id: row.id,
+        image_count:
+          response.data.images.length === 0 ? 1 : response.data.images.length,
+        image_list: imageList,
+      });
+      openModal(MODAL_FORM_JASA);
+    }
   };
 
   const handleClickDeleteJasa = async (id: string) => {
@@ -162,6 +186,7 @@ function ProfilePage() {
             image={user.image}
             no_hp={user.no_hp}
             description={user.description}
+            created_at={user?.created_at}
           />
         </section>
 
@@ -173,7 +198,10 @@ function ProfilePage() {
             <DefaultButton
               label='Tambah'
               className='bg-indigo-500 hover:bg-indigo-700'
-              onClick={() => openModal(MODAL_FORM_JASA)}
+              onClick={() => {
+                setInitialJasa(initialFormJasa);
+                openModal(MODAL_FORM_JASA);
+              }}
             />
           </div>
 
@@ -210,6 +238,7 @@ function ProfilePage() {
       <ProfilePageFormJasa
         initialValues={initialJasa}
         setListJasa={setListJasa}
+        setInitialJasa={setInitialJasa}
       />
 
       <ProfilePageFormPenawaran

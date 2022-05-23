@@ -20,6 +20,8 @@ interface IPropsDetailFindProducer {
 
 function DetailFindProducer({ data }: IPropsDetailFindProducer) {
   const [producerDetail, setproducerDetail] = useState(data);
+
+  console.log("data", data);
   if (isEmpty(data)) {
     redirectTo("/find-producer");
     return <></>;

@@ -7,9 +7,11 @@ import * as Yup from "yup";
 import DefaultInputText from "~/components/input/DefaultInputText";
 import DefaultInputTextArea from "~/components/input/DefaultInputTextArea";
 import { jenisBudidayaList, waktuPanenList } from "~/lib/types";
-import { createJasa, updateJasa } from "./utils/api";
+import { createJasa, deleteImageJasa, updateJasa } from "./utils/api";
 import { isEmpty, toastSucces } from "~/lib/helpers";
 import { closeModal } from "~/components/modal/DefaultModal";
+import { BASE_URL } from "~/lib/setupApi";
+import { initialFormJasa } from "./ProfilePage";
 
 const formJasaSchema = Yup.object().shape({
   title: Yup.string()
@@ -23,11 +25,13 @@ const formJasaSchema = Yup.object().shape({
 interface IProfilePageFormJasa {
   initialValues: IInitialValuesJasa;
   setListJasa: Function;
+  setInitialJasa: React.Dispatch<React.SetStateAction<IInitialValuesJasa>>;
 }
 
 function ProfilePageFormJasa({
   initialValues,
   setListJasa,
+  setInitialJasa,
 }: IProfilePageFormJasa) {
   const [waktuPanen, setWaktuPanen] = useState<string[]>(() => {
     if (initialValues.waktu_panen.length === 0) {
@@ -44,18 +48,27 @@ function ProfilePageFormJasa({
     }
   });
 
+  const [imageDeleteList, setImageDeleteList] = useState<string[]>([]);
   const [imageCount, setImageCount] = useState(1);
   const [imageList, setImageList] = useState<
     {
       value: any;
       index: number;
+      src?: string;
+      id?: string;
     }[]
-  >([
-    {
-      value: "",
-      index: 1,
-    },
-  ]);
+  >(() => {
+    if (initialValues.image_list.length === 0) {
+      return [
+        {
+          value: "",
+          index: 1,
+        },
+      ];
+    } else {
+      return initialValues.image_list;
+    }
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -72,10 +85,11 @@ function ProfilePageFormJasa({
       formData.append("description", values.description);
       formData.append("harvest_time", waktuPanen.toString());
       formData.append("type_cultivation", jenisBudidaya.toString());
+      formData.append("image_delete_id", imageDeleteList.toString());
 
-      imageList.map((item) => {
+      imageList.map((item, index) => {
         if (!isEmpty(item.value)) {
-          formData.append("image[]", item.value);
+          formData.append(`image[${index}]`, item.value);
         }
       });
 
@@ -87,7 +101,10 @@ function ProfilePageFormJasa({
             closeModal(MODAL_FORM_JASA);
             setListJasa();
           })
-          .catch((error) => console.log(error));
+          .catch((error) => {
+            setSubmitting(false);
+            console.log(error);
+          });
       } else {
         updateJasa(formData, initialValues.id.toString())
           .then(() => {
@@ -95,8 +112,12 @@ function ProfilePageFormJasa({
             setSubmitting(false);
             closeModal(MODAL_FORM_JASA);
             setListJasa();
+            setInitialJasa(initialFormJasa);
           })
-          .catch((error) => console.log(error));
+          .catch((error) => {
+            setSubmitting(false);
+            console.log(error);
+          });
       }
     },
   });
@@ -127,39 +148,43 @@ function ProfilePageFormJasa({
     const images = [];
     for (let i = 1; i <= imageCount; i++) {
       images.push(
-        <div className='grid grid-cols-12 items-center gap-3' key={i}>
-          <div className='col-span-11'>
-            <DefaultInputText
-              className='text-sm image-1'
-              classNameLabel='text-sm image-label'
-              label='Gambar'
-              id={`image-${i}`}
-              type='file'
-              placeholder=''
-              onChange={(e: any) => handleChangeImage(e.target.files[0], i)}
-            />
+        <div>
+          <div className='grid grid-cols-12 items-center gap-3' key={i}>
+            <div className='col-span-11'>
+              <DefaultInputText
+                className='text-sm image-1'
+                classNameLabel='text-sm image-label'
+                label='Gambar'
+                id={`image-${i}`}
+                type='file'
+                placeholder=''
+                onChange={(e: any) => handleChangeImage(e.target.files[0], i)}
+              />
+            </div>
+
+            <div className='col-span-1'>
+              <button
+                type='button'
+                className='mt-5'
+                onClick={() => handleChangeDeleteImage(i)}>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  className='h-6 w-6'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  stroke='currentColor'
+                  strokeWidth={2}>
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
 
-          <div className='col-span-1'>
-            <button
-              type='button'
-              className='mt-5'
-              onClick={() => handleChangeDeleteImage(i)}>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                className='h-6 w-6'
-                fill='none'
-                viewBox='0 0 24 24'
-                stroke='currentColor'
-                strokeWidth={2}>
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'
-                />
-              </svg>
-            </button>
-          </div>
+          <ImageDisplay index={i} />
         </div>
       );
     }
@@ -167,10 +192,34 @@ function ProfilePageFormJasa({
     return <>{images}</>;
   };
 
+  const ImageDisplay = ({ index }: { index: number }) => {
+    const checked = imageList.filter((item) => item.index === index);
+
+    if (checked.length > 0 && !isEmpty(checked[0].src)) {
+      return (
+        <div className='flex gap-2'>
+          <img
+            src={`${BASE_URL}/${checked[0].src}`}
+            alt={`image-${index}`}
+            className='max-w-xs'
+          />
+
+          <button
+            type='button'
+            className='text-xs bg-red-500  px-2  gap-1 text-white'
+            // @ts-ignore
+            onClick={() => handleDeleteImage(checked[0].id)}>
+            Delete
+          </button>
+        </div>
+      );
+    } else {
+      return <></>;
+    }
+  };
+
   const handleChangeImage = (value: any, index: number) => {
     const filtered = imageList.filter((item) => item.index === index);
-    // @ts-ignore
-    document.querySelector(".image-label").innerHTML = "OK";
     if (filtered.length > 0) {
       const deleteFiltered = imageList.filter((item) => item.index !== index);
       setImageList([
@@ -200,9 +249,25 @@ function ProfilePageFormJasa({
     }
   };
 
+  const handleDeleteImage = async (id: string) => {
+    const response = await deleteImageJasa(id);
+    if (response.state) {
+      const filter = imageList.filter(
+        (item) => item.id?.toString() !== id.toString()
+      );
+
+      setImageList(filter);
+      setImageCount(imageCount - 1);
+      setImageDeleteList([id, ...imageDeleteList]);
+    }
+  };
+
   useEffect(() => {
     setJenisBudidaya(initialValues.jenis_budidaya);
     setWaktuPanen(initialValues.waktu_panen);
+    setImageCount(initialValues.image_count);
+    setImageList(initialValues.image_list);
+    setImageDeleteList([]);
   }, [initialValues.id]);
 
   return (
@@ -293,7 +358,7 @@ function ProfilePageFormJasa({
 
           <button
             type='button'
-            className='text-xs bg-yellow-500 rounded-lg flex items-center px-2 py-1 gap-1 text-white'
+            className='text-xs bg-yellow-500 rounded-lg flex items-center px-2 py-1 gap-1 mt-2 text-white'
             onClick={() => {
               const count = imageCount + 1;
               setImageList([

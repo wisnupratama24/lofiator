@@ -59,6 +59,21 @@ export const deleteJasa = async (id: string) => {
     }
 }
 
+export const deleteImageJasa = async (id: string) => {
+    try {
+        await setupApi.delete(`/feed/delete-image/${id}`);
+        return {
+            state : true,
+            message : 'Berhasil'
+        }
+    } catch (error) {
+        return {
+            state: false,
+            message : "Gagal"
+        }
+    }
+}
+
 
 export const fetchListPenawaran =  async () => {
     try {

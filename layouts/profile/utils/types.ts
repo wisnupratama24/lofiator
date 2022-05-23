@@ -15,7 +15,8 @@ export interface IInitialValuesJasa {
     description: string;
     waktu_panen: string[];
     jenis_budidaya: string[];
-
+    image_count?: any;
+    image_list?: any;
 }
 
 export interface IInitialValuesPenawaran {

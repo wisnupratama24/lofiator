@@ -8,6 +8,7 @@ import { BASE_URL } from "~/lib/setupApi";
 import { IFeedDetailModel } from "../utils/types";
 import styles from "./DetailFindProducer.module.scss";
 import moment from "moment";
+import DetailFindProducerImage from "./DetailFindProducerImage";
 
 interface IPropsDetailFindProducerPage {
   producerDetail: IFeedDetailModel;
@@ -37,7 +38,9 @@ function DetailFindProducerPage({
                 </span>
               </div>
 
-              <div className='bg-gray-200 h-60 w-11/12 mt-5'></div>
+              <div className='mt-5'>
+                <DetailFindProducerImage />
+              </div>
 
               <p className='text-gray-500 mt-5 text-sm w-10/12'>
                 {producerDetail.feed.description}
