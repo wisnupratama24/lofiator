@@ -17,6 +17,13 @@ export const fetchFeedService = async (customQuery?: string) => {
   }
 };
 
+export const postOfferService = (serviceId: string, letter: string) => {
+  return setupApi.post(`/service/offer`, {
+    service_id: serviceId,
+    letter,
+  });
+};
+
 export const fetchFeedDetailService = async (id: string) => {
   try {
     const response = await setupApi.get(`/page/find-cultivator/detail/${id}`);

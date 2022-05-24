@@ -39,7 +39,7 @@ function DetailFindProducerPage({
               </div>
 
               <div className='mt-5'>
-                <DetailFindProducerImage />
+                <DetailFindProducerImage images={producerDetail.images} />
               </div>
 
               <p className='text-gray-500 mt-5 text-sm w-10/12'>

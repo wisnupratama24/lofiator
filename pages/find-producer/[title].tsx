@@ -6,6 +6,7 @@ import { IFeedDetailModel } from "~/layouts/find-producer/utils/types";
 import { LayoutSplashScreen, redirectTo } from "~/lib/authenticate";
 import { isEmpty } from "~/lib/helpers";
 import { ErrorBoundary } from "react-error-boundary";
+import { useRouter } from "next/router";
 
 const DetailFindProducerPage = dynamic(
   () => import("~/layouts/find-producer/detail/DetailFindProducerPage"),
@@ -20,8 +21,17 @@ interface IPropsDetailFindProducer {
 
 function DetailFindProducer({ data }: IPropsDetailFindProducer) {
   const [producerDetail, setproducerDetail] = useState(data);
+  const router = useRouter();
 
-  console.log("data", data);
+  const setNewData = async () => {
+    const response = await fetchFeedDetailProducer(
+      router.query.title as string
+    );
+    if (response.state) {
+      setproducerDetail(response.data);
+    }
+  };
+
   if (isEmpty(data)) {
     redirectTo("/find-producer");
     return <></>;
@@ -29,7 +39,10 @@ function DetailFindProducer({ data }: IPropsDetailFindProducer) {
     return (
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Suspense fallback={<LayoutSplashScreen />}>
-          <DetailFindProducerPage producerDetail={producerDetail} />
+          <DetailFindProducerPage
+            producerDetail={producerDetail}
+            setNewData={setNewData}
+          />
         </Suspense>
       </ErrorBoundary>
     );

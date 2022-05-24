@@ -8,8 +8,15 @@ import "swiper/css/pagination";
 
 // import required modules
 import { Pagination } from "swiper";
+import { BASE_URL } from "~/lib/setupApi";
 
-export default function DetailFindProducerImage() {
+export default function DetailFindProducerImage({
+  images,
+}: {
+  images: {
+    image: string;
+  }[];
+}) {
   return (
     <div className='max-w-3xl'>
       <Swiper
@@ -20,21 +27,18 @@ export default function DetailFindProducerImage() {
         }}
         modules={[Pagination]}
         className='mySwiper'>
-        <SwiperSlide>
-          <div className='h-60 bg-red-200'>SLIDE 1</div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div className='h-60 bg-red-200'>SLIDE 2</div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div className='h-60 bg-red-200'>SLIDE 3</div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div className='h-60 bg-red-200'>SLIDE 4</div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div className='h-60 bg-red-200'>SLIDE 5</div>
-        </SwiperSlide>
+        {images.map((image, index) => {
+          return (
+            <SwiperSlide key={index}>
+              <div className='h-64'>
+                <img
+                  src={`${BASE_URL}/${image.image}`}
+                  alt={`producer image ${index}`}
+                />
+              </div>
+            </SwiperSlide>
+          );
+        })}
       </Swiper>
     </div>
   );

@@ -2,20 +2,23 @@ import Head from "next/head";
 import React from "react";
 import { Layout, Navbar } from "~/components";
 import DefaultButton from "~/components/button/DefaultButton";
+import { openModal } from "~/components/modal/DefaultModal";
 import { defaultDateDisplay, differentDayWithNow } from "~/lib/helpers";
 import { BASE_URL } from "~/lib/setupApi";
-import { IServiceDetailModel } from "../utils/types";
+import { IServiceDetailModel, MODAL_FORM_OFFER } from "../utils/types";
+import DetailFindCultivatorFormOffer from "./DetailFindCultivatorFormOffer";
 import styles from "./DetailFindCulvitator.module.scss";
 import OtherOffer from "./OtherOffer";
 
 interface IPropsDetailFindCulvitatorPage {
   serviceDetail: IServiceDetailModel;
+  setNewData: Function;
 }
 
 function DetailFindCulvitatorPage({
   serviceDetail,
+  setNewData,
 }: IPropsDetailFindCulvitatorPage) {
-  console.log(serviceDetail);
   return (
     <>
       <Head>
@@ -127,6 +130,7 @@ function DetailFindCulvitatorPage({
                   <DefaultButton
                     label='Ajukan Tawaran'
                     className='mx-2 bg-green-700'
+                    onClick={() => openModal(MODAL_FORM_OFFER)}
                   />
                   <DefaultButton
                     label='Hubungi Owner'
@@ -144,11 +148,11 @@ function DetailFindCulvitatorPage({
                 {serviceDetail.service_offers.map((serviceOffer, index) => {
                   return (
                     <div className='flex gap-3 items-center' key={index}>
-                      <div className='bg-gray-300 h-16 w-16'>
+                      <div>
                         <img
                           src={`${BASE_URL}/${serviceOffer.image}`}
                           alt={`Profile User Tawar ${serviceOffer.name}`}
-                          className='max-h-16'
+                          className='max-h-20'
                         />
                       </div>
                       <div>
@@ -171,6 +175,8 @@ function DetailFindCulvitatorPage({
           </div>
         </section>
       </Layout>
+
+      <DetailFindCultivatorFormOffer setNewData={setNewData} />
     </>
   );
 }

@@ -10,3 +10,5 @@ export interface IServiceOfferModel {
   city: string;
   image: string;
 }
+
+export const MODAL_FORM_OFFER = "modal-form-offer";
