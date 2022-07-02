@@ -50,23 +50,25 @@ export const initialFormJasa: IInitialValuesJasa = {
   image_list: [],
 };
 
+export const initialFormPenawaran: IInitialValuesPenawaran = {
+  id: "",
+  name: "",
+  min_budget: "",
+  max_budget: "",
+  status: "draft",
+  weight: "",
+  description: "",
+  publish_date: "",
+  publish_limit: "",
+};
+
 function ProfilePage() {
   const [user, setUser] = useState<IUserModel>(initialUser);
   const [initialJasa, setInitialJasa] =
     useState<IInitialValuesJasa>(initialFormJasa);
 
   const [initialPenawaran, setInitialPenawaran] =
-    useState<IInitialValuesPenawaran>({
-      id: "",
-      name: "",
-      min_budget: "",
-      max_budget: "",
-      status: "draft",
-      weight: "",
-      description: "",
-      publish_date: "",
-      publish_limit: "",
-    });
+    useState<IInitialValuesPenawaran>(initialFormPenawaran);
 
   const [rowsJasa, setRowsJasa] = useState<IFeedModel[]>([]);
   const [rowsPenawaran, setRowsPenawaran] = useState<IServiceModel[]>([]);
@@ -221,7 +223,10 @@ function ProfilePage() {
             <DefaultButton
               label='Tambah'
               className='bg-indigo-500 hover:bg-indigo-700'
-              onClick={() => openModal(MODAL_FORM_PENAWARAN)}
+              onClick={() => {
+                setInitialPenawaran(initialFormPenawaran);
+                openModal(MODAL_FORM_PENAWARAN);
+              }}
             />
           </div>
 
@@ -244,6 +249,7 @@ function ProfilePage() {
       <ProfilePageFormPenawaran
         initialValues={initialPenawaran}
         setListPenawaran={setListPenawaran}
+        setInitialPenawaran={setInitialPenawaran}
       />
     </>
   );

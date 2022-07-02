@@ -18,12 +18,12 @@ import { setAuthorized, setNameUser } from "~/components/pageInit/reducer";
 const loginSchema = Yup.object().shape({
   email: Yup.string()
     .email("Wrong email format")
-    .min(3, "Minimum 3 symbols")
-    .max(50, "Maximum 50 symbols")
+    .min(5, "Minimum 5 character")
+    .max(50, "Maximum 50 character")
     .required("Email is required"),
   password: Yup.string()
-    .min(3, "Minimum 3 symbols")
-    .max(50, "Maximum 50 symbols")
+    .min(5, "Minimum 5 character")
+    .max(50, "Maximum 50 character")
     .required("Password is required"),
 });
 
@@ -32,7 +32,7 @@ const initialValues = {
   password: "",
 };
 
-function LoginPage() {
+function LoginPage({ cultivatorList }: any) {
   let history = useRouter();
   const dispatch = useDispatch();
 
@@ -82,7 +82,7 @@ function LoginPage() {
 
       <Layout>
         <section className={styles.loginPage}>
-          <NewOffer />
+          <NewOffer cultivatorList={cultivatorList} />
 
           <div className={styles.form}>
             <h4 className='title-auth'>Log in</h4>

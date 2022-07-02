@@ -13,7 +13,7 @@ const lastUpdate = [
     value: 2,
   },
   {
-    label: "24 Jam Terakhir",
+    label: "Sebulan Terakhir",
     value: 3,
   },
   {
@@ -77,7 +77,7 @@ function Filter({
                 key={index}
                 id={`last-update-${index}`}
                 value={item.value}
-                {...formik.getFieldProps("type")}
+                onChange={(e) => formik.setFieldValue("type", e.target.value)}
               />
             );
           })}

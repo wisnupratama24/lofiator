@@ -11,16 +11,16 @@ import { closeModal } from "~/components/modal/DefaultModal";
 
 const updateProfileUserSchema = Yup.object().shape({
   name: Yup.string()
-    .min(3, "Minimum 3 symbols")
-    .max(50, "Maximum 50 symbols")
+    .min(5, "Minimum 5 character")
+    .max(50, "Maximum 50 character")
     .required("Name is required"),
   city: Yup.string()
-    .min(3, "Minimum 3 symbols")
-    .max(50, "Maximum 50 symbols")
+    .min(5, "Minimum 5 character")
+    .max(50, "Maximum 50 character")
     .required("Asal is required"),
   no_hp: Yup.string()
-    .min(3, "Minimum 3 symbols")
-    .max(50, "Maximum 50 symbols")
+    .min(5, "Minimum 5 character")
+    .max(50, "Maximum 50 character")
     .required("No HP is required"),
   description: Yup.string()
     .min(20, "Minimum 20 symbols")

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { DefaultModal } from "~/components";
+import { Alert, DefaultModal } from "~/components";
 import { IInitialValuesJasa, MODAL_FORM_JASA } from "./utils/types";
 
 import { useFormik } from "formik";
@@ -15,10 +15,10 @@ import { initialFormJasa } from "./ProfilePage";
 
 const formJasaSchema = Yup.object().shape({
   title: Yup.string()
-    .min(3, "Minimum 3 symbols")
+    .min(5, "Minimum 5 character")
     .required("Judul tidak boleh kosong"),
   description: Yup.string()
-    .min(20, "Minimum 20 symbols")
+    .min(20, "Minimum 20 character")
     .required("Deskripsi tidak boleh kosong"),
 });
 
@@ -77,7 +77,7 @@ function ProfilePageFormJasa({
     },
     enableReinitialize: true,
     validationSchema: formJasaSchema,
-    onSubmit: (values, { setSubmitting }) => {
+    onSubmit: (values, { setSubmitting, setStatus }) => {
       setSubmitting(true);
 
       const formData = new FormData();
@@ -97,13 +97,25 @@ function ProfilePageFormJasa({
         createJasa(formData)
           .then(() => {
             toastSucces("Berhasil");
+            setStatus({
+              state: true,
+              message: [],
+            });
             setSubmitting(false);
             closeModal(MODAL_FORM_JASA);
             setListJasa();
           })
           .catch((error) => {
+            const errorList = error.response.data.error;
+            const errorListArray = [];
+            for (const property in errorList) {
+              errorListArray.push(errorList[property]);
+            }
+            setStatus({
+              state: false,
+              message: errorListArray[0][0],
+            });
             setSubmitting(false);
-            console.log(error);
           });
       } else {
         updateJasa(formData, initialValues.id.toString())
@@ -112,11 +124,23 @@ function ProfilePageFormJasa({
             setSubmitting(false);
             closeModal(MODAL_FORM_JASA);
             setListJasa();
+            setStatus({
+              state: true,
+              message: [],
+            });
             setInitialJasa(initialFormJasa);
           })
           .catch((error) => {
+            const errorList = error.response.data.error;
+            const errorListArray = [];
+            for (const property in errorList) {
+              errorListArray.push(errorList[property]);
+            }
+            setStatus({
+              state: false,
+              message: errorListArray[0][0],
+            });
             setSubmitting(false);
-            console.log(error);
           });
       }
     },
@@ -276,6 +300,12 @@ function ProfilePageFormJasa({
         target={MODAL_FORM_JASA}
         title='Jasa'
         disabled={formik.isSubmitting || !formik.isValid}>
+        <Alert
+          show={formik.status === undefined ? false : true}
+          message={formik.status?.message}
+          type={formik.status?.state ? "success" : "danger"}
+        />
+
         <div className='mt-2'>
           <DefaultInputText
             className='text-sm'

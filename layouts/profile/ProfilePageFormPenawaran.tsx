@@ -10,24 +10,35 @@ import { createPenawaran, updatePenawaran } from "./utils/api";
 import { isEmpty, toastSucces } from "~/lib/helpers";
 import { closeModal } from "~/components/modal/DefaultModal";
 import DefaultInputOption from "~/components/input/DefaultInputOption";
+import { initialFormPenawaran } from "./ProfilePage";
 
 const formJasaSchema = Yup.object().shape({
   name: Yup.string()
-    .min(3, "Minimum 3 symbols")
+    .min(5, "Minimum 5 character")
     .required("Judul tidak boleh kosong"),
+  min_budget: Yup.string()
+    .min(5, "Minimum 5 character")
+    .required("minimal budget tidak boleh kosong"),
+  max_budget: Yup.string()
+    .min(5, "Minimum 5 character")
+    .required("maximal budget tidak boleh kosong"),
+  publish_date: Yup.string().required("Tgl Publish tidak boleh kosong"),
+  publish_limit: Yup.string().required("Tgl Deadline tidak boleh kosong"),
   description: Yup.string()
-    .min(20, "Minimum 20 symbols")
+    .min(20, "Minimum 20 character")
     .required("Deskripsi tidak boleh kosong"),
 });
 
 interface IProfilePageFormPenawaran {
   initialValues: IInitialValuesPenawaran;
   setListPenawaran: Function;
+  setInitialPenawaran: Function;
 }
 
 function ProfilePageFormPenawaran({
   initialValues,
   setListPenawaran,
+  setInitialPenawaran,
 }: IProfilePageFormPenawaran) {
   const [imageCount, setImageCount] = useState(1);
   const [imageList, setImageList] = useState<
@@ -78,6 +89,7 @@ function ProfilePageFormPenawaran({
         createPenawaran(formData)
           .then(() => {
             toastSucces("Berhasil");
+            setInitialPenawaran(initialFormPenawaran);
             setSubmitting(false);
             closeModal(MODAL_FORM_PENAWARAN);
             setListPenawaran();
@@ -90,6 +102,7 @@ function ProfilePageFormPenawaran({
         updatePenawaran(formData, initialValues.id.toString())
           .then(() => {
             toastSucces("Berhasil");
+            setInitialPenawaran(initialFormPenawaran);
             setSubmitting(false);
             closeModal(MODAL_FORM_PENAWARAN);
             setListPenawaran();

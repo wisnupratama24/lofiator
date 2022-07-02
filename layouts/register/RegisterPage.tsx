@@ -13,20 +13,20 @@ import { LOGIN_PAGE } from "~/constants/page";
 const registerSchema = Yup.object().shape({
   email: Yup.string()
     .email("Wrong email format")
-    .min(3, "Minimum 3 symbols")
-    .max(50, "Maximum 50 symbols")
+    .min(5, "Minimum 5 character")
+    .max(50, "Maximum 50 character")
     .required("Email is required"),
   name: Yup.string()
-    .min(3, "Minimum 3 symbols")
-    .max(50, "Maximum 50 symbols")
-    .required("Email is required"),
+    .min(5, "Minimum 5 character")
+    .max(50, "Maximum 50 character")
+    .required("Name is required"),
   password: Yup.string()
-    .min(3, "Minimum 3 symbols")
-    .max(50, "Maximum 50 symbols")
+    .min(5, "Minimum 5 character")
+    .max(50, "Maximum 50 character")
     .required("Password is required"),
   password_confirmation: Yup.string()
-    .min(3, "Minimum 3 symbols")
-    .max(50, "Maximum 50 symbols")
+    .min(5, "Minimum 5 character")
+    .max(50, "Maximum 50 character")
     .required("Password is required"),
 });
 
@@ -48,8 +48,7 @@ function RegisterPage() {
           setSubmitting(false);
           setStatus({
             state: true,
-            message:
-              "Pendaftaran berhasil, konfirmasi email anda, kemudian login",
+            message: "Pendaftaran berhasil, silahkan login.",
           });
         })
         .catch((error) => {

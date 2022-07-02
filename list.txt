@@ -25,3 +25,13 @@ ada nama user, profile user, posted at, title, desc, waktu panen, jenis budidaya
 
 buat filter berdasarkan jenis budidaya & asal/kota, dan date_start dan date finish (dari createdAt)
 
+
+
+========================
+
+user
+
+1. hiwisnupratama@gmail.com kolis123
+1. bagasaditya@gmail.com kolis123
+Saya menyediakan ikan nila
+bagi yang berminat silahkan datang ke desa prapag lor, kecamatan losari kabupaten brebes
