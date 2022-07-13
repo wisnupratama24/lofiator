@@ -19,6 +19,10 @@ export const getCookieUser = () => {
   }
 };
 
+export const clearCookies = () => {
+  Cookies.remove("user");
+};
+
 export const defaultDateDisplay = (date: string, withTime = true) => {
   const format = withTime ? "DD/MM/YYYY HH:mm" : "DD/MM/YYYY";
   return moment(date).utc().local().format(format);
@@ -47,20 +51,26 @@ export const toastSucces = (msg: string) => {
   });
 };
 
+export const scrollToTop = () => {
+  return window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+};
+
 export const toastError = (msg: string) => {
   return toast.error(msg, {
     position: toast.POSITION.TOP_CENTER,
   });
 };
 
-
-export function formatNumber(number:string|number) {
+export function formatNumber(number: string | number) {
   if (isEmpty(number)) {
     return "0";
   } else {
     const thousand = new Intl.NumberFormat();
     return thousand.format(
-        // @ts-ignore
+      // @ts-ignore
       typeof number === "number" ? number.toFixed(2) : number
     );
   }

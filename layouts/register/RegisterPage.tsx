@@ -9,6 +9,8 @@ import { userRegister } from "./utils/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { LOGIN_PAGE } from "~/constants/page";
+import { scrollToTop } from "~/lib/helpers";
+import { useRouter } from "next/router";
 
 const registerSchema = Yup.object().shape({
   email: Yup.string()
@@ -38,6 +40,7 @@ const initialValues = {
 };
 
 function RegisterPage() {
+  let history = useRouter();
   const formik = useFormik({
     initialValues,
     validationSchema: registerSchema,
@@ -50,6 +53,12 @@ function RegisterPage() {
             state: true,
             message: "Pendaftaran berhasil, silahkan login.",
           });
+
+          scrollToTop();
+
+          setTimeout(() => {
+            history.push(LOGIN_PAGE);
+          }, 1000);
         })
         .catch((error) => {
           const errorList = error.response.data.error;
