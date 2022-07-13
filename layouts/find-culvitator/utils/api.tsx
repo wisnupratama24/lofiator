@@ -24,6 +24,21 @@ export const postOfferService = (serviceId: string, letter: string) => {
   });
 };
 
+export const deleteServiceOffer = async (id: string) => {
+  try {
+    await setupApi.delete(`/service/delete-offer/${id}`);
+    return {
+      state: true,
+      message: "Berhasil",
+    };
+  } catch (error) {
+    return {
+      state: false,
+      message: "Gagal",
+    };
+  }
+};
+
 export const fetchFeedDetailService = async (id: string) => {
   try {
     const response = await setupApi.get(`/page/find-cultivator/detail/${id}`);

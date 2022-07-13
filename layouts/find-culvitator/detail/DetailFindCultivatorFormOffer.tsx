@@ -39,8 +39,13 @@ function DetailFindCultivatorFormOffer({
           closeModal(MODAL_FORM_OFFER);
           await setNewData();
         })
-        .catch(() => {
-          toastError("Gagal mengajukan tawaran anda!");
+        .catch((error) => {
+          const errorList = error.response.data.error;
+          const errorListArray = [];
+          for (const property in errorList) {
+            errorListArray.push(errorList[property]);
+          }
+          toastError(errorListArray[0][0]);
           setSubmitting(false);
         });
     },

@@ -13,7 +13,11 @@ import { userLogin } from "./utils/api";
 import Cookies from "js-cookie";
 import { REGISTER_PAGE } from "~/constants/page";
 import { useDispatch } from "react-redux";
-import { setAuthorized, setNameUser } from "~/components/pageInit/reducer";
+import {
+  setAuthorized,
+  setNameUser,
+  setUserID,
+} from "~/components/pageInit/reducer";
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
@@ -47,9 +51,11 @@ function LoginPage({ cultivatorList }: any) {
           const userCookie = JSON.stringify({
             accessToken: response.data.data.api_token,
             name: response.data.data.user.name,
+            id: response.data.data.user.id,
           });
           Cookies.set("user", userCookie);
           dispatch(setNameUser(response.data.data.user.name));
+          dispatch(setUserID(response.data.data.user.id));
           dispatch(setAuthorized(true));
           history.push({
             pathname: "/",

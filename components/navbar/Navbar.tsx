@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { LOGIN_PAGE, PROFILE_PAGE, REGISTER_PAGE } from "~/constants/page";
 import { clearCookies, getCookieUser } from "~/lib/helpers";
 import { Logo } from "..";
@@ -30,6 +29,7 @@ function Navbar() {
   const [pageInit, setPageInit] = useState<IInitialStatePageInit>({
     isAuthorized: false,
     name: "",
+    id: "",
   });
 
   useEffect(() => {
@@ -38,6 +38,7 @@ function Navbar() {
       setPageInit({
         isAuthorized: true,
         name: cookie.name,
+        id: cookie.id,
       });
     }
   }, []);

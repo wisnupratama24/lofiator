@@ -10,7 +10,8 @@ import { ErrorBoundary } from "react-error-boundary";
 const DetailFindCulvitatorPage = dynamic(
   () => import("~/layouts/find-culvitator/detail/DetailFindCulvitatorPage"),
   {
-    suspense: true,
+    // suspense: true,
+    ssr: false,
   }
 );
 

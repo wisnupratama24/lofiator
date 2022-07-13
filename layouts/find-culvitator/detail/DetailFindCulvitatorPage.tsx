@@ -1,10 +1,18 @@
 import Head from "next/head";
 import React from "react";
+import { useSelector } from "react-redux";
 import { Layout, Navbar } from "~/components";
 import DefaultButton from "~/components/button/DefaultButton";
 import { openModal } from "~/components/modal/DefaultModal";
-import { defaultDateDisplay, differentDayWithNow } from "~/lib/helpers";
+import { IInitialStatePageInit } from "~/components/pageInit/reducer";
+import {
+  defaultDateDisplay,
+  differentDayWithNow,
+  toastError,
+  toastSucces,
+} from "~/lib/helpers";
 import { BASE_URL } from "~/lib/setupApi";
+import { deleteServiceOffer } from "../utils/api";
 import { IServiceDetailModel, MODAL_FORM_OFFER } from "../utils/types";
 import DetailFindCultivatorFormOffer from "./DetailFindCultivatorFormOffer";
 import styles from "./DetailFindCulvitator.module.scss";
@@ -19,6 +27,19 @@ function DetailFindCulvitatorPage({
   serviceDetail,
   setNewData,
 }: IPropsDetailFindCulvitatorPage) {
+  const pageInit = useSelector(
+    (pageInit: any) => pageInit.pageInit
+  ) as IInitialStatePageInit;
+
+  const handleClickDeleteOffer = async (id: string) => {
+    const response = await deleteServiceOffer(id);
+    if (response.state) {
+      toastSucces(response.message);
+    } else {
+      toastError(response.message);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -147,22 +168,74 @@ function DetailFindCulvitatorPage({
               <div className={styles.DetailFindCulvitatorUserOffer}>
                 {serviceDetail.service_offers.map((serviceOffer, index) => {
                   return (
-                    <div className='flex gap-3 items-center' key={index}>
-                      <div>
-                        <img
-                          src={`${BASE_URL}/${serviceOffer.image}`}
-                          alt={`Profile User Tawar ${serviceOffer.name}`}
-                          className='max-h-20'
-                        />
+                    <div key={index}>
+                      <div className='flex gap-3 items-center'>
+                        <div>
+                          <img
+                            src={`${BASE_URL}/${serviceOffer.image}`}
+                            alt={`Profile User Tawar ${serviceOffer.name}`}
+                            className='max-h-20'
+                          />
+                        </div>
+                        <div>
+                          <p className='text-sm font-medium text-gray-800'>
+                            {serviceOffer.name}
+                          </p>
+                          <p className='text-xs font-light text-gray-500 mt-1'>
+                            {serviceOffer.city}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <p className='text-sm font-medium text-gray-800'>
-                          {serviceOffer.name}
-                        </p>
-                        <p className='text-xs font-light text-gray-500 mt-1'>
-                          {serviceOffer.city}
-                        </p>
-                      </div>
+
+                      {pageInit?.id === serviceOffer.user_id ? (
+                        <div
+                          className='flex'
+                          onClick={() =>
+                            handleClickDeleteOffer(serviceOffer.id)
+                          }>
+                          <div className='mt-3 py-2 px-3 bg-red-600 flex gap-2 items-center text-xs text-white rounded-md cursor-pointer'>
+                            <div>
+                              <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                className='h-4 w-4'
+                                fill='none'
+                                viewBox='0 0 24 24'
+                                stroke='currentColor'
+                                strokeWidth={2}>
+                                <path
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  d='M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16'
+                                />
+                              </svg>
+                            </div>
+                            <div>HAPUS</div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div> </div>
+                      )}
+
+                      {/* <div className='flex'>
+                        <div className='mt-3 py-2 px-3 bg-red-600 flex gap-2 items-center text-xs text-white rounded-md cursor-pointer'>
+                          <div>
+                            <svg
+                              xmlns='http://www.w3.org/2000/svg'
+                              className='h-4 w-4'
+                              fill='none'
+                              viewBox='0 0 24 24'
+                              stroke='currentColor'
+                              strokeWidth={2}>
+                              <path
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                d='M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16'
+                              />
+                            </svg>
+                          </div>
+                          <div>HAPUS</div>
+                        </div>
+                      </div> */}
                     </div>
                   );
                 })}
