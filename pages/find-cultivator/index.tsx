@@ -40,7 +40,6 @@ function FindCultivator({ data }: IPropsFindCultivator) {
       setSubmitting(false);
     },
   });
-  console.log("formik", formik.values.type);
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Suspense fallback={<LayoutSplashScreen />}>

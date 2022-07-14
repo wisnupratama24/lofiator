@@ -6,6 +6,7 @@ import { IServiceDetailModel } from "~/layouts/find-culvitator/utils/types";
 import { LayoutSplashScreen, redirectTo } from "~/lib/authenticate";
 import { isEmpty } from "~/lib/helpers";
 import { ErrorBoundary } from "react-error-boundary";
+import { useRouter } from "next/router";
 
 const DetailFindCulvitatorPage = dynamic(
   () => import("~/layouts/find-culvitator/detail/DetailFindCulvitatorPage"),
@@ -21,6 +22,16 @@ interface IPropsDetailFindCulvitator {
 
 function DetailFindCulvitator({ data }: IPropsDetailFindCulvitator) {
   const [serviceDetail, setServiceDetail] = useState(data);
+  const router = useRouter();
+  const { title } = router.query;
+
+  const setNewData = async () => {
+    const response = await fetchFeedDetailService(title as string);
+    if (response.state) {
+      setServiceDetail(response.data);
+    }
+  };
+
   if (isEmpty(data)) {
     redirectTo("/find-cultivator");
     return <></>;
@@ -28,7 +39,10 @@ function DetailFindCulvitator({ data }: IPropsDetailFindCulvitator) {
     return (
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Suspense fallback={<LayoutSplashScreen />}>
-          <DetailFindCulvitatorPage serviceDetail={serviceDetail} />
+          <DetailFindCulvitatorPage
+            serviceDetail={serviceDetail}
+            setNewData={setNewData}
+          />
         </Suspense>
       </ErrorBoundary>
     );

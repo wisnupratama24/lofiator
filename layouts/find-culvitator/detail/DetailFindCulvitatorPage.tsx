@@ -35,6 +35,7 @@ function DetailFindCulvitatorPage({
     const response = await deleteServiceOffer(id);
     if (response.state) {
       toastSucces(response.message);
+      await setNewData();
     } else {
       toastError(response.message);
     }
