@@ -35,3 +35,29 @@ user
 1. bagasaditya@gmail.com kolis123
 Saya menyediakan ikan nila
 bagi yang berminat silahkan datang ke desa prapag lor, kecamatan losari kabupaten brebes
+
+
+REVISI SKRIPSI
+
+PAK ZUNTA
+
+- Perbaiki Rumusan dan Tujuan Masalah (done)
+- Perbaiki Kerangka Pemikiran (done)
+- Perbaiki daftar pustaka (done)
+- Perbaiki pengujian UAT (done)
+   - Tambahkan Grafik (done)
+   - Tambahkan % (done)
+- Perbaiki kesimpulan harus ada angka keberhasilan (done)
+
+PAK HERU
+
+- Tambahkan keterangan mengenai apa itu lofiator (done)
+- Tambahkan Class Diagram (done)
+- Perbaiki Use Case aktor cuma 1 (done)
+- Perbaiki Activity Diagram (done)
+
+PAK DEFRI
+
+- Tambakan keterbatasan scrum, tanya dosbim (done)
+- Tambahkan hasil actual pada blackbox (done)
+- Ubah kesimpulan jadi status pengujian (done)
